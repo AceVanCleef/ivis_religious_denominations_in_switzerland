@@ -3,7 +3,7 @@ export function printtest(){
 }
 
 export function loadReligionData(){
-	d3.csv("../data/religions.csv", function(error, d) {
+	d3.tsv("../data/religions.csv", function(error, d) {
 		//accessor function: offers full control on how you return each item.
 		console.log(d[0]);
 	  return {
