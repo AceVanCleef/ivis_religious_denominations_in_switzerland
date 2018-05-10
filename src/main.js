@@ -7,6 +7,6 @@ const main = function() {
 	printtest();
 	const rawReligionData = loadReligionData();
 	console.log(rawReligionData);
-}
+};
 
 main();
