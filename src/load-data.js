@@ -1,4 +1,5 @@
-import {hans} from "./main.js";
+import {cartogramMap} from "./cartogram-map.js";
+import {pointToPointChart} from "./point-to-point-chart.js";
 
 d3.csv("/data/religions.csv", (d) => {
     return {
@@ -14,5 +15,6 @@ d3.csv("/data/religions.csv", (d) => {
         konfessionslose : +d.konfessionslose
     };
 }, (data) => {
-    hans(data)
+    cartogramMap(data);
+    pointToPointChart(data);
 });
