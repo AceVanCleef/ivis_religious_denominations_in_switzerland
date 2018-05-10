@@ -1,3 +1,5 @@
+import {hans} from "./main.js";
+
 d3.csv("/data/religions.csv", (d) => {
     return {
         kanton : d.kanton,
@@ -12,5 +14,5 @@ d3.csv("/data/religions.csv", (d) => {
         konfessionslose : +d.konfessionslose
     };
 }, (data) => {
-    console.log(data);
+    hans(data)
 });
