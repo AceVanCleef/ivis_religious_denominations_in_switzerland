@@ -1,5 +1,4 @@
-import {cartogramMap} from "./cartogram-map.js";
-import {pointToPointChart} from "./point-to-point-chart.js";
+import {main} from "./main.js";
 
 d3.csv("/data/religions.csv", (d) => {
     return {
@@ -15,6 +14,13 @@ d3.csv("/data/religions.csv", (d) => {
         konfessionslose : +d.konfessionslose
     };
 }, (data) => {
-    cartogramMap(data);
-    pointToPointChart(data);
+    console.log(data);
+    groupDataByYear(data);
+    main(data, data);
 });
+
+function groupDataByYear(data){
+    console.log("groupDataByYear");
+    console.log(data[0]);
+    console.log(data[0].jahr);
+}
