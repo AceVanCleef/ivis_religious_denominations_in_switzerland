@@ -15,12 +15,43 @@ d3.csv("/data/religions.csv", (d) => {
     };
 }, (data) => {
     console.log(data);
-    groupDataByYear(data);
-    main(data, data);
+    main(data, groupDataByYear(data));
 });
 
 function groupDataByYear(data){
     console.log("groupDataByYear");
-    console.log(data[0]);
-    console.log(data[0].jahr);
+    return groupByYears(data, extractYearsFrom(data));
+}
+
+function extractYearsFrom(data) {
+    var allYears = [];
+    data.forEach(function(e){
+        if (!allYears.includes(e.jahr)) {
+            allYears.push(e.jahr);
+        }
+    });
+    console.log("allYears:");
+    console.log(allYears);
+    return allYears;
+}
+
+function groupByYears(data, years){
+    var groupedData = [];
+    years.forEach( function(y){
+        var dataOfOneYear = data.filter(function(e){
+            return e.jahr === y;
+        });
+        var totalOfOneYear = dataOfOneYear.shift();
+        console.log("data of one year:");
+        console.log(dataOfOneYear);
+        // this is how an element will look like:
+        groupedData.push({
+            year: y,
+            total: totalOfOneYear,
+            kantone: dataOfOneYear
+        })
+    });
+    console.log("grouped data:");
+    console.log(groupedData);
+    return groupedData;
 }
