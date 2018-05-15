@@ -24,72 +24,39 @@ svg.append("text")
     .text("Switzerland");
 
 //-----------------------------------------------------------
-// arc generator for donut plot
-const arc = d3.arc()
-    .innerRadius(25)
-    .outerRadius(45);
 
-const contextHolder = createContextHolder();
 
 // Create Event Handlers for mouse
-function mouseover(citizens, cantonId) {
-    var percent = citizens[cantonId] / citizens["Schweiz"];
-    contextHolder.select("path")
-        .attr("d", arc({ startAngle: 0, endAngle: percent * 2 * Math.PI}));
-    d3.select("#context-label").text("" + Math.round(percent *100, 0) + "%");
-    //country.style("fill", "orange");
+function mouseover(cantonId) {
+
+    console.log("moving over " + cantonId);
 }
 
-function mouseout(citizen, cantonId) {
-    contextHolder.select("path")
-        .attr("d", arc({ startAngle: 0, endAngle: 0}));
-    d3.select("#context-label").text("");
-    //country.style("fill", "white");
+function mouseout(cantonId) {
+
+    console.log("moving out of " + cantonId);
 }
 
-// create small context rectangle
-// <g id="context-holder" transform="...">
-//   <rect width="100" height="100" />
-//   <path transform="translate(50,50)"></path>
-// </g>
-function createContextHolder() {
-    const contextHolder = g.append("g")
-        .attr("id", "context-holder")
-        .attr("transform", `translate(${width-80},${height-80})`);
-    contextHolder.append("rect")
-        .attr("width", 100)
-        .attr("height", 100);
-    contextHolder.append("path")
-        .attr("transform", "translate(50,50)");
-    contextHolder.append("text")
-        .attr("id", "context-label")
-        .attr("transform", "translate(50,50)");
-    return contextHolder;
-}
 
 function doPlot() {
     var projection = d3.geoAlbers()  // Albers is best at lat 45°
         .rotate([0, 0])       // rotate around globe by lat and long
         .center([8.3, 46.8])  // lat and long in degrees
-        .scale(16000)         // zoom into small switzerland, depends on the projection
+        .scale(10000)         // zoom into small switzerland, depends on the projection
         .translate([width / 2, height / 2])  // move to center of map
         .precision(.1);
 
     d3.queue()
         .defer(d3.json, "./data/readme-swiss.json")
-        .defer(d3.csv, "./data/swiss-cantons.csv")
-        .await(function(error, topology, citizens) {
+        .await(function(error, topology) {
             var cantons = topojson.feature(topology, topology.objects.cantons);
             console.log("Map loaded data?");
             console.log(topology);
-            console.log(citizens);
             console.log(cantons);
 
             var pathGenerator = d3.geoPath().projection(projection);
             g.append("path")
-            //    .datum(cantons)
-            //    .attr("class", "canton")
-            //    .attr("d", pathGenerator);
+
 
             var cant = g.selectAll("path.canton")
                     .data(cantons.features)
@@ -99,8 +66,8 @@ function doPlot() {
             .attr("class", "canton")
                 .attr("d", pathGenerator);
 
-            cant.on("mouseover", d => mouseover(citizens[0], d.id));
-            cant.on("mouseout", d => mouseout(citizens.columns[0], d.id));
+            cant.on("mouseover", d => mouseover(d.id));
+            cant.on("mouseout", d => mouseout(d.id));
 
             g.append("path")
                 .datum(topojson.mesh(topology, topology.objects.cantons))
