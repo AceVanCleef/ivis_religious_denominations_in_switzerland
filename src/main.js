@@ -12,5 +12,5 @@ export function main(data, dataGroupedByYear){
     console.log("grouped data in main:");
     console.log(dataGroupedByYear);
     cartogramMap(data);
-    pointToPointChart(data);
+    pointToPointChart(data, dataGroupedByYear);
 }

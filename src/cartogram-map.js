@@ -1,5 +1,4 @@
 function cartogramMap(data) {
-	console.log(data[0].kanton);
 
     // create svg canvas
     const canvHeight = 600, canvWidth = 800;
