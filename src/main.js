@@ -1,6 +1,6 @@
 import {cartogramMap} from "./cartogram-map.js";
 import {pointToPointChart} from "./point-to-point-chart.js";
-//import {InitSwissMap} from "./swiss_map.1.0.js";
+import {initSwissMap} from "./swiss_map.1.0.js";
 
 /**
  * a main function to rule them all: acts as an overarcing check list.
@@ -11,8 +11,21 @@ export function main(data, dataGroupedByYear){
     console.log("rawData:");
     console.log(data);
     console.log("grouped data in main:");
-    console.log(dataGroupedByYear);
-    //InitSwissMap();
+    console.log(dataGroupedByYear /*, dataGroupedByYear*/);
+    initSwissMap( getCantonNamesFrom(dataGroupedByYear) );
     cartogramMap(data);
     pointToPointChart(data);
+}
+
+
+//------------------------ Helper functions -------------------------
+
+
+function getCantonNamesFrom(dataGroupedByYear) {
+    console.log("getCantonNamesFrom");
+    var cantonNames = dataGroupedByYear[0].kantone.map(function(e){
+        return e.kanton;
+    });
+    console.log((cantonNames));
+    return cantonNames;
 }

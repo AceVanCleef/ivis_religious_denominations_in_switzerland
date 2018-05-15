@@ -23,7 +23,39 @@ svg.append("text")
     .attr("dy", "1.5em")
     .text("Switzerland");
 
-//-----------------------------------------------------------
+////-------------------------- Entry Point ------------------------
+
+
+export function initSwissMap(cantonNames /*, dataGroupedByYear*/){
+    doPlot(cantonNames);
+}
+
+////-------------------------- StateData ------------------------
+export const selectedCantonsChecklist = [];
+
+function createSelectedCantonObj(cantonId, cantonName) {
+    return {
+        name: cantonName,
+        iso: cantonId,
+        isSelected: false // on page loaded, must be false.
+    }
+}
+
+function createSelectedCantonsChecklist(cantonNames, cantonIDs) {
+    //fill up with SelectedCantonObj.
+    console.log("IDs in createSelectedCantonsChecklist:");
+    console.log(cantonIDs);
+/*
+    //sort both arrays:
+    console.log("sorted?");
+    const sortedCantonNames = cantonNames.sort();
+    const sortedCantonIDs = cantonIDs.sort();
+    console.log(sortedCantonNames);
+    console.log(sortedCantonIDs);*/
+}
+
+
+//------------------------ EventHandler Callbacks -------------------------
 
 
 // Create Event Handlers for mouse
@@ -37,14 +69,20 @@ function mouseout(cantonId) {
     console.log("moving out of " + cantonId);
 }
 
+function click(cantonId) {
 
-function doPlot() {
+    console.log("CLICKED ON " + cantonId);
+}
+
+
+function doPlot(cantonNames) {
     var projection = d3.geoAlbers()  // Albers is best at lat 45°
         .rotate([0, 0])       // rotate around globe by lat and long
         .center([8.3, 46.8])  // lat and long in degrees
         .scale(10000)         // zoom into small switzerland, depends on the projection
         .translate([width / 2, height / 2])  // move to center of map
         .precision(.1);
+
 
     d3.queue()
         .defer(d3.json, "./data/readme-swiss.json")
@@ -57,6 +95,11 @@ function doPlot() {
             var pathGenerator = d3.geoPath().projection(projection);
             g.append("path")
 
+            var cantonIDs = cantons.features.map(function(e){
+                return e.id;
+            });
+
+            createSelectedCantonsChecklist(cantonNames, cantonIDs);
 
             var cant = g.selectAll("path.canton")
                     .data(cantons.features)
@@ -66,8 +109,12 @@ function doPlot() {
             .attr("class", "canton")
                 .attr("d", pathGenerator);
 
+            console.log("cant:");
+            console.log(cant);
+
             cant.on("mouseover", d => mouseover(d.id));
             cant.on("mouseout", d => mouseout(d.id));
+            cant.on("click", d => click(d.id));
 
             g.append("path")
                 .datum(topojson.mesh(topology, topology.objects.cantons))
@@ -84,4 +131,3 @@ function doPlot() {
         });
 }
 
-doPlot();
