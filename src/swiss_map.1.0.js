@@ -1,8 +1,7 @@
 import {toggleCSSClass} from "./helper_lib.js";
 
-
 // create svg canvas
-const canvHeight = 600, canvWidth = 960;
+const canvHeight = 375, canvWidth = 600;
 const svg = d3.select("body").append("svg")
     .attr("width", canvWidth)
     .attr("height", canvHeight)
@@ -34,6 +33,7 @@ export function initSwissMap(){
 }
 
 ////-------------------------- StateData ------------------------
+// holds the state of each canton whether it is selected or not.
 export const selectedCantons = [];
 
 function createSelectedCantonObj(cantonId) {
@@ -53,8 +53,6 @@ function populateSelectedCantons(cantonIDs) {
 
 //------------------------ EventHandler Callbacks -------------------------
 
-
-// Create Event Handlers for mouse
 function mouseover(cantonId) {
 
     console.log("moving over " + cantonId);
@@ -73,13 +71,17 @@ function click(cantonId) {
     console.log(currentCanton.iso);
     currentCanton.isSelected = !currentCanton.isSelected;
     console.log(currentCanton.isSelected);
+
     //TODO: send Update command to line chart.
     // yourUpdateFunctoinHere();
 
     toggleCSSClass(currentCanton.iso, "selected-canton");
 }
 
-function doPlot(cantonNames) {
+
+//------------------------ drawing the map -------------------------
+
+function doPlot() {
     var projection = d3.geoAlbers()  // Albers is best at lat 45°
         .rotate([0, 0])       // rotate around globe by lat and long
         .center([8.3, 46.8])  // lat and long in degrees

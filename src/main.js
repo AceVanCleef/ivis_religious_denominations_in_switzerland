@@ -1,6 +1,7 @@
-import {cartogramMap} from "./cartogram-map.js";
 import {pointToPointChart} from "./point-to-point-chart.js";
 import {initSwissMap} from "./swiss_map.1.0.js";
+
+
 
 /**
  * a main function to rule them all: acts as an overarcing check list.
@@ -13,7 +14,6 @@ export function main(data, dataGroupedByYear){
     console.log("grouped data in main:");
     console.log(dataGroupedByYear);
     initSwissMap();
-    cartogramMap(data);
     pointToPointChart(data);
 }
 
