@@ -15,6 +15,12 @@
     .canton:hover {
       fill: burlywood;
     }
+    .selected-canton {
+      fill: blue;
+    }
+    .selected-canton:hover {
+      fill: lightblue;
+    }
     .canton-boundary {
       fill: none;
       stroke: black;
@@ -57,7 +63,7 @@ multiple files but must be added before point-to-point-chart.js using <script> t
 	- canton_region_chooser.js
 	- denomination_graph.js
 -->
-
+<script src='src/helper_lib.js' type='module'></script>
 <script src='src/load-data.js' type='module'></script>
 <script src='src/swiss_map.1.0.js' type='module'></script>
 <script src='src/main.js' type='module'></script>

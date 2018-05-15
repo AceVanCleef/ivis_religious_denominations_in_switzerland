@@ -1,3 +1,6 @@
+import {toggleCSSClass} from "./helper_lib.js";
+
+
 // create svg canvas
 const canvHeight = 600, canvWidth = 960;
 const svg = d3.select("body").append("svg")
@@ -26,8 +29,8 @@ svg.append("text")
 ////-------------------------- Entry Point ------------------------
 
 
-export function initSwissMap(cantonNames /*, dataGroupedByYear*/){
-    doPlot(cantonNames);
+export function initSwissMap(){
+    doPlot();
 }
 
 ////-------------------------- StateData ------------------------
@@ -41,21 +44,10 @@ function createSelectedCantonObj(cantonId) {
 }
 
 function populateSelectedCantons(cantonIDs) {
-    //fill up with SelectedCantonObj.
-    console.log("IDs in createSelectedCantonsChecklist:");
-    console.log(cantonIDs);
-
-    //sort both arrays:
-    console.log("sorted?");
     const sortedCantonIDs = cantonIDs.sort();
-    console.log(sortedCantonIDs);
-
     sortedCantonIDs.forEach( function(id) {
         selectedCantons.push( createSelectedCantonObj(id) );
     });
-
-    console.log("populated selectedCantons?");
-    console.log(selectedCantons);
 }
 
 
@@ -74,10 +66,18 @@ function mouseout(cantonId) {
 }
 
 function click(cantonId) {
-
     console.log("CLICKED ON " + cantonId);
-}
+    var currentCanton = selectedCantons.find( function(e) {
+        return e.iso === cantonId;
+    });
+    console.log(currentCanton.iso);
+    currentCanton.isSelected = !currentCanton.isSelected;
+    console.log(currentCanton.isSelected);
+    //TODO: send Update command to line chart.
+    // yourUpdateFunctoinHere();
 
+    toggleCSSClass(currentCanton.iso, "selected-canton");
+}
 
 function doPlot(cantonNames) {
     var projection = d3.geoAlbers()  // Albers is best at lat 45°
@@ -92,9 +92,6 @@ function doPlot(cantonNames) {
         .defer(d3.json, "./data/readme-swiss.json")
         .await(function(error, topology) {
             var cantons = topojson.feature(topology, topology.objects.cantons);
-            console.log("Map loaded data?");
-            console.log(topology);
-            console.log(cantons);
 
             var pathGenerator = d3.geoPath().projection(projection);
             g.append("path")
@@ -102,7 +99,6 @@ function doPlot(cantonNames) {
             var cantonIDs = cantons.features.map(function(e){
                 return e.id;
             });
-
             populateSelectedCantons(cantonIDs);
 
             var cant = g.selectAll("path.canton")
@@ -112,9 +108,6 @@ function doPlot(cantonNames) {
                     .attr("id", d=> d.id)
             .attr("class", "canton")
                 .attr("d", pathGenerator);
-
-            console.log("cant:");
-            console.log(cant);
 
             cant.on("mouseover", d => mouseover(d.id));
             cant.on("mouseout", d => mouseout(d.id));
