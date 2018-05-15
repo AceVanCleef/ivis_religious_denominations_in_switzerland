@@ -31,27 +31,31 @@ export function initSwissMap(cantonNames /*, dataGroupedByYear*/){
 }
 
 ////-------------------------- StateData ------------------------
-export const selectedCantonsChecklist = [];
+export const selectedCantons = [];
 
-function createSelectedCantonObj(cantonId, cantonName) {
+function createSelectedCantonObj(cantonId) {
     return {
-        name: cantonName,
         iso: cantonId,
         isSelected: false // on page loaded, must be false.
     }
 }
 
-function createSelectedCantonsChecklist(cantonNames, cantonIDs) {
+function populateSelectedCantons(cantonIDs) {
     //fill up with SelectedCantonObj.
     console.log("IDs in createSelectedCantonsChecklist:");
     console.log(cantonIDs);
-/*
+
     //sort both arrays:
     console.log("sorted?");
-    const sortedCantonNames = cantonNames.sort();
     const sortedCantonIDs = cantonIDs.sort();
-    console.log(sortedCantonNames);
-    console.log(sortedCantonIDs);*/
+    console.log(sortedCantonIDs);
+
+    sortedCantonIDs.forEach( function(id) {
+        selectedCantons.push( createSelectedCantonObj(id) );
+    });
+
+    console.log("populated selectedCantons?");
+    console.log(selectedCantons);
 }
 
 
@@ -99,7 +103,7 @@ function doPlot(cantonNames) {
                 return e.id;
             });
 
-            createSelectedCantonsChecklist(cantonNames, cantonIDs);
+            populateSelectedCantons(cantonIDs);
 
             var cant = g.selectAll("path.canton")
                     .data(cantons.features)

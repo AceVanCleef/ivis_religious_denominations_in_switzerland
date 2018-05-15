@@ -11,8 +11,8 @@ export function main(data, dataGroupedByYear){
     console.log("rawData:");
     console.log(data);
     console.log("grouped data in main:");
-    console.log(dataGroupedByYear /*, dataGroupedByYear*/);
-    initSwissMap( getCantonNamesFrom(dataGroupedByYear) );
+    console.log(dataGroupedByYear);
+    initSwissMap();
     cartogramMap(data);
     pointToPointChart(data);
 }
@@ -28,4 +28,13 @@ function getCantonNamesFrom(dataGroupedByYear) {
     });
     console.log((cantonNames));
     return cantonNames;
+}
+
+function getISOsFrom(dataGroupedByYear) {
+    console.log("getISOsFrom");
+    var cantonISOs = dataGroupedByYear[0].kantone.map(function(e){
+        return e.iso;
+    });
+    console.log((cantonISOs));
+    return cantonISOs;
 }
