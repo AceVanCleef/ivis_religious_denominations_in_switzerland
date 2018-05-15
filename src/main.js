@@ -1,5 +1,6 @@
 import {pointToPointChart} from "./point-to-point-chart.js";
 import {initSwissMap} from "./swiss_map.1.0.js";
+import {setupRegionSelectors} from "./region_selectors.js";
 
 
 
@@ -14,6 +15,7 @@ export function main(data, dataGroupedByYear){
     console.log("grouped data in main:");
     console.log(dataGroupedByYear);
     initSwissMap();
+    setupRegionSelectors();
     pointToPointChart(data);
 }
 

@@ -129,4 +129,3 @@ function doPlot() {
                 .text(function(d) { return d.properties.name; });
         });
 }
-

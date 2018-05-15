@@ -3,50 +3,42 @@
 <head>
   <title>Religious Denominations in Switzerland</title>
   <meta charset="utf-8"/>
-
-  <style>
-    #chart-title {
-      font-size: 24px;
-      text-anchor: start;
-    }
-    .canton {
-      fill: #bbb;
-    }
-    .canton:hover {
-      fill: burlywood;
-    }
-    .selected-canton {
-      fill: blue;
-    }
-    .selected-canton:hover {
-      fill: lightblue;
-    }
-    .canton-boundary {
-      fill: none;
-      stroke: black;
-      stroke-linejoin: round;
-    }
-    text {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 10px;
-      text-anchor: middle;
-    }
-    text.canton-label {
-      -webkit-user-select: none; /* Safari 3.1+ */
-      -moz-user-select: none; /* Firefox 2+ */
-      -ms-user-select: none; /* IE 10+ */
-      user-select: none; /* Standard syntax */
-      pointer-events: none; /* Click trough text element: https://stackoverflow.com/questions/3680429/click-through-a-div-to-underlying-elements*/
-    }
-
-    #context-holder {
-      fill: none;
-      stroke: black;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="css/swiss-map.css">
 </head>
 <body>
 <!-- put your stuff here -->
+<form id="swiss-regions">
+  <!-- Grossregionen gemäss https://de.wikipedia.org/wiki/Liste_der_Regionen_in_der_Schweiz-->
+  <input type="checkbox" name="Schweiz" value="CH">Ganze Schweiz
+  <br/>
+  <section id="bfs-regions">
+    <p>Grossregionen gemäss BFS</p>
+    <input type="checkbox" name="Ostschweiz" value="OCH"
+           onclick="updateCantonSelectionBy(this)">Ostschweiz
+    <br/>
+    <input type="checkbox" name="Zuerich" value="ZH">Zürich
+    <br/>
+    <input type="checkbox" name="Zentralschweiz" value="ZS">Zentralschweiz
+    <br/>
+    <input type="checkbox" name="Nordwestschweiz" value="NW">Nordwestschweiz
+    <br/>
+    <input type="checkbox" name="EspaceMittelland" value="EML">Espace Mittelland
+    <br/>
+    <input type="checkbox" name="Genferseeregion" value="GSR">Genferseeregion
+    <br/>
+    <input type="checkbox" name="Tessin" value="TI">Tessin
+  </section>
+  <section id="topographical-regions">
+    <p>Topographische Regionen</p>
+    <input type="checkbox" name="Jura" value="Jura">Jura
+    <br/>
+    <input type="checkbox" name="Mittelland" value="Mittelland">Mittelland
+    <br/>
+    <input type="checkbox" name="Alpen" value="Alpen">Alpen
+    <br/>
+  </section>
+</form>
+
 
 <!-- javascript -->
 <!-- external js libraries-->
@@ -66,6 +58,7 @@ multiple files but must be added before point-to-point-chart.js using <script> t
 <script src='src/helper_lib.js' type='module'></script>
 <script src='src/load-data.js' type='module'></script>
 <script src='src/swiss_map.1.0.js' type='module'></script>
+<script src='src/region_selectors.js' type='module'></script>
 <script src='src/main.js' type='module'></script>
 </body>
 </html>
