@@ -38,7 +38,6 @@ function mouseover(citizens, cantonId) {
         .attr("d", arc({ startAngle: 0, endAngle: percent * 2 * Math.PI}));
     d3.select("#context-label").text("" + Math.round(percent *100, 0) + "%");
     //country.style("fill", "orange");
-    console.log("mouse over on: " + cantonId);
 }
 
 function mouseout(citizen, cantonId) {
@@ -46,8 +45,6 @@ function mouseout(citizen, cantonId) {
         .attr("d", arc({ startAngle: 0, endAngle: 0}));
     d3.select("#context-label").text("");
     //country.style("fill", "white");
-    console.log("mouse out on: " + cantonId);
-
 }
 
 // create small context rectangle
@@ -77,26 +74,29 @@ function doPlot() {
         .scale(16000)         // zoom into small switzerland, depends on the projection
         .translate([width / 2, height / 2])  // move to center of map
         .precision(.1);
-        
+
     d3.queue()
         .defer(d3.json, "./data/readme-swiss.json")
         .defer(d3.csv, "./data/swiss-cantons.csv")
         .await(function(error, topology, citizens) {
             var cantons = topojson.feature(topology, topology.objects.cantons);
+            console.log("Map loaded data?");
             console.log(topology);
+            console.log(citizens);
+            console.log(cantons);
 
             var pathGenerator = d3.geoPath().projection(projection);
-            //g.append("path")
+            g.append("path")
             //    .datum(cantons)
             //    .attr("class", "canton")
             //    .attr("d", pathGenerator);
-        
-            cant = g.selectAll("path.canton")
-                .data(cantons.features)
-                .enter()
-                .append("path")
-                .attr("id", d=> d.id)
-                .attr("class", "canton")
+
+            var cant = g.selectAll("path.canton")
+                    .data(cantons.features)
+                    .enter()
+                    .append("path")
+                    .attr("id", d=> d.id)
+            .attr("class", "canton")
                 .attr("d", pathGenerator);
 
             cant.on("mouseover", d => mouseover(citizens[0], d.id));
@@ -110,11 +110,11 @@ function doPlot() {
             g.selectAll("text.canton-label")
                 .data(cantons.features)
                 .enter().append("text")
-                    .attr("class", "canton-label")
-                    .attr("transform", function(d) { return "translate(" + pathGenerator.centroid(d) + ")"; })
-                    .attr("dy", ".35em")
-                    .text(function(d) { return d.properties.name; });
-    });
+                .attr("class", "canton-label")
+                .attr("transform", function(d) { return "translate(" + pathGenerator.centroid(d) + ")"; })
+                .attr("dy", ".35em")
+                .text(function(d) { return d.properties.name; });
+        });
 }
 
 doPlot();
