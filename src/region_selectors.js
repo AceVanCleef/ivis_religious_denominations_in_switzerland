@@ -8,19 +8,19 @@ import {updateMapVisuals} from "./swiss_map.1.0.js";
 //1. prepare dictionaries like dict<region-code, iso[]>.
 const regions = [
     //BFS regions
-    { name: "Ostschweiz",       code: "OCH",    cantons: ["AI","AR","GL","GR","SG","SH","TG"]},
-    { name: "Zuerich",          code: "ZH",     cantons:["ZH"]},
-    { name: "Zentralschweiz",   code: "ZS",     cantons:["LU", "NW", "OW", "SZ", "UR", "ZG"]},
-    { name: "Nordwestschweiz",  code: "NW",     cantons:["AG", "BL", "BS"]},
-    { name: "EspaceMittelland", code: "EML",    cantons:["BE", "FR", "JU", "NE", "SO"]},
-    { name: "Genferseeregion",  code: "GSR",    cantons:["GE", "VD", "VS"]},
-    { name: "Tessin",           code: "TIC",     cantons:["TI"]},
+    { name: "Ostschweiz",       code: "_OCH",    cantons: ["AI","AR","GL","GR","SG","SH","TG"]},
+    { name: "Zuerich",          code: "_ZH",     cantons:["ZH"]},
+    { name: "Zentralschweiz",   code: "_ZS",     cantons:["LU", "NW", "OW", "SZ", "UR", "ZG"]},
+    { name: "Nordwestschweiz",  code: "_NW",     cantons:["AG", "BL", "BS"]},
+    { name: "EspaceMittelland", code: "_EML",    cantons:["BE", "FR", "JU", "NE", "SO"]},
+    { name: "Genferseeregion",  code: "_GSR",    cantons:["GE", "VD", "VS"]},
+    { name: "Tessin",           code: "_TIC",     cantons:["TI"]},
     // topographical regions
-    { name: "Jura",             code: "Jura",   cantons:["BL", "JU", "NE", "SO"]},
-    { name: "Mittelland",       code: "Mittelland", cantons:["AG", "BS", "FR", "GE", "SH", "TG", "VD", "ZG", "ZH"]},
-    { name: "Alpen",            code: "Alpen",  cantons:["AI", "AR", "BE", "GL", "GR", "LU", "NW", "OW", "SG", "SZ", "TI", "UR", "VS"]},
+    { name: "Jura",             code: "_Jura",   cantons:["BL", "JU", "NE", "SO"]},
+    { name: "Mittelland",       code: "_Mittelland", cantons:["AG", "BS", "FR", "GE", "SH", "TG", "VD", "ZG", "ZH"]},
+    { name: "Alpen",            code: "_Alpen",  cantons:["AI", "AR", "BE", "GL", "GR", "LU", "NW", "OW", "SG", "SZ", "TI", "UR", "VS"]},
     //whole country of CH
-    { name: "Schweiz",          code: "CH",
+    { name: "Schweiz",          code: "_CH",
         cantons: ["AG", "AI", "AR", "BE", "BL", "BS", "FR", "GE", "GL", "GR", "JU", "LU", "NE", "NW", "OW", "SG", "SH", "SO", "SZ", "TG", "TI", "UR", "VD", "VS", "ZG", "ZH"]
     }
 ];
@@ -67,14 +67,11 @@ function updateCheckboxes() {
 
     var currentlySelectedISOs = selectedCantons.filter(e => e.isSelected === true)
         .map(e => {return e.iso});
-    console.log("updateOtherCheckboxes:");
-    console.log(currentlySelectedISOs);
 
     //check which checkbox must be active or not.
     //checkboxSelection.property('checked', true);
 
     regions.forEach(function(region){
-        //console.log(region);
         //in region.cantons schauen, ob all ihre iso's in currentlySelectedISOs enthalten sind.
         var checkCurrentRegion = true;
         for (var i = 0; i < region.cantons.length; ++i){
@@ -83,12 +80,9 @@ function updateCheckboxes() {
                 break;
             }
         }
-        console.log(i);
-        console.log(region.name + " must be checked?" + (i + 1 === region.cantons.length));
+        if (region.code === "ZH") console.log("ZH:" + checkCurrentRegion);
         d3.select('#' + region.code).property('checked', checkCurrentRegion);
     });
-
-    //includes().
 }
 
 
