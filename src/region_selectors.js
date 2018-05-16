@@ -1,4 +1,4 @@
-import {selectedCantons} from "./swiss_map.1.0.js";
+import {cantonsPM} from "./swiss_map.1.0.js";
 import {updateMapVisuals} from "./swiss_map.1.0.js";
 
 /**
@@ -61,16 +61,11 @@ function handleUserInput() {
 }
 
 export function updateCheckboxes() {
-    // 1. go through selectedCantons and verify whether they must be checked or not
-    // 1.2. they must be checked when all their cantons[]
-    //      elements are mark3ed as isSelected in selectedCantons
-
-    var currentlySelectedISOs = selectedCantons.filter(e => e.isSelected === true)
+    //get iso codes of all currently selected cantons.
+    var currentlySelectedISOs = cantonsPM.filter(e => e.isSelected === true)
         .map(e => {return e.iso});
 
-    //check which checkbox must be active or not.
-    //checkboxSelection.property('checked', true);
-
+    //check which checkbox must be active or not...
     regions.forEach(function(region){
         //in region.cantons schauen, ob all ihre iso's in currentlySelectedISOs enthalten sind.
         var checkCurrentRegion = true;
@@ -80,52 +75,62 @@ export function updateCheckboxes() {
                 break;
             }
         }
-        if (region.code === "ZH") console.log("ZH:" + checkCurrentRegion);
+        // toggle the checked property of the <input> element.
         d3.select('#' + region.code).property('checked', checkCurrentRegion);
     });
 }
 
 
 function updateMap(checkbox, cantonISOs) {
-    // TODO:
     // 1. Find out, which checkbox has been clicked.
-    // 2. update selectedCantons from swiss-map.1.0.js
+    // 2. update cantonsPM from swiss-map.1.0.js
     // 3. update map visuals
     // 4. inform line graph.
-
-    console.log("updateMap:");
-    console.log(checkboxSelection);
-    //    var cbAsSelection = d3.select(this);
-    var relevantCantons = updateSelectedCantons(cantonISOs, checkbox.checked);
+    var relevantCantons = updateCantonsPM(cantonISOs, checkbox.checked);
     updateMapVisuals(relevantCantons, checkbox.checked);
 
 
     //TODO: inform line graph.
 }
 
-function updateSelectedCantons(cantonISOs, checked) {
-    //1. get all relevant selectedCantons which are listed in cantonList
+/**
+ *
+ * @param cantonISOs array of Kantonskürzel of all currently selected cantons. e.g. "ZH"
+ * @param checked whether the clicked checkbox is checked or not.
+ * @returns {Array} elements of the cantonsPM array from swiss_map.1.0.js
+ *                  which fullfill the criteria 'isSelected === true'.
+ */
+function updateCantonsPM(cantonISOs, checked) {
+    //1. get all relevant cantonsPM which are listed in cantonISOs
     //2. set their isSelected attribute according to checked.
-    var relevantCantons = [];
-    for (var i = 0; i < selectedCantons.length; ++i) {
-        for (var j = 0; j < cantonISOs.length; ++j) {
-            if (selectedCantons[i].iso === cantonISOs[j]){
-                relevantCantons.push(selectedCantons[i]);
-            }
-        }
-    }
+    var cantons2update = filterCantonsBy(cantonISOs);
     console.log("found cantons:");
     if (checked) {
-        relevantCantons.forEach(e => e.isSelected = true);
+        cantons2update.forEach(e => e.isSelected = true);
     } else {
-        relevantCantons.forEach(e => e.isSelected = false);
+        cantons2update.forEach(e => e.isSelected = false);
     }
-    console.log(relevantCantons);
-    return relevantCantons
+    console.log(cantons2update);
+    return cantons2update
 
 }
 
+//TODO: move to swiss_map.js
+function filterCantonsBy(cantonISOs) {
+    var relevantCantons = [];
+    for (var i = 0; i < cantonsPM.length; ++i) {
+        for (var j = 0; j < cantonISOs.length; ++j) {
+            if (cantonsPM[i].iso === cantonISOs[j]){
+                relevantCantons.push(cantonsPM[i]);
+            }
+        }
+    }
+    return relevantCantons;
+}
+
+//how to select html item within d3.on() callback function.:
 function click() {
+    //Todo: remove when no longer needed and documented.
     console.log("inside click");
     console.log(d3.select(this));
     console.log(this);

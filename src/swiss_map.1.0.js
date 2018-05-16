@@ -38,7 +38,7 @@ export function initSwissMap(){
 
 ////-------------------------- StateData ------------------------
 // holds the state of each canton whether it is selected or not.
-export const selectedCantons = [];
+export const cantonsPM = [];
 
 function createSelectedCantonObj(cantonId) {
     return {
@@ -47,10 +47,10 @@ function createSelectedCantonObj(cantonId) {
     }
 }
 
-function populateSelectedCantons(cantonIDs) {
+function populateCantonsPM(cantonIDs) {
     const sortedCantonIDs = cantonIDs.sort();
     sortedCantonIDs.forEach( function(id) {
-        selectedCantons.push( createSelectedCantonObj(id) );
+        cantonsPM.push( createSelectedCantonObj(id) );
     });
 }
 
@@ -69,7 +69,7 @@ function mouseout(cantonId) {
 
 function click(cantonId) {
     console.log("CLICKED ON " + cantonId);
-    var currentCanton = selectedCantons.find( function(e) {
+    var currentCanton = cantonsPM.find( function(e) {
         return e.iso === cantonId;
     });
     console.log(currentCanton.iso);
@@ -106,7 +106,7 @@ function doPlot() {
             var cantonIDs = cantons.features.map(function(e){
                 return e.id;
             });
-            populateSelectedCantons(cantonIDs);
+            populateCantonsPM(cantonIDs);
 
             console.log("console ids");
             console.log(cantonIDs);
@@ -141,9 +141,9 @@ function doPlot() {
 
 //------------------------ communication with region_selectors.js -------------------------
 
-export function updateMapVisuals(relevantCantons, checked){
+export function updateMapVisuals(cantons2update, checked){
 
-    relevantCantons.forEach( function(currentCanton){
+    cantons2update.forEach( function(currentCanton){
         if (checked){
             addCSSClass(currentCanton.iso, "selected-canton");
         } else {
