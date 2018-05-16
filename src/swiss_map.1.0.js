@@ -29,14 +29,14 @@ svg.append("text")
     .attr("dy", "1.5em")
     .text("Switzerland");
 
-////-------------------------- Entry Point ------------------------
+////-------------------------- main() Entry Point ------------------------
 
 
 export function initSwissMap(){
     doPlot();
 }
 
-////-------------------------- StateData ------------------------
+////-------------------------- StateData: cantonsPM ------------------------
 // holds the state of each canton whether it is selected or not.
 export const cantonsPM = [];
 
@@ -85,25 +85,22 @@ function filterCantonsBy(cantonISOs) {
 
 
 //------------------------ EventHandler Callbacks -------------------------
-
+//TODO: remove when no longer needed.
 function mouseover(cantonId) {
 
     console.log("moving over " + cantonId);
 }
-
+//TODO: remove when no longer needed.
 function mouseout(cantonId) {
 
     console.log("moving out of " + cantonId);
 }
 
 function click(cantonId) {
-    console.log("CLICKED ON " + cantonId);
     var currentCanton = cantonsPM.find( function(e) {
         return e.iso === cantonId;
     });
-    console.log(currentCanton.iso);
     currentCanton.isSelected = !currentCanton.isSelected;
-    console.log(currentCanton.isSelected);
 
     //TODO: send Update command to line chart.
     // yourUpdateFunctoinHere();
@@ -148,8 +145,9 @@ function doPlot() {
             .attr("class", "canton")
                 .attr("d", pathGenerator);
 
-            cant.on("mouseover", d => mouseover(d.id));
-            cant.on("mouseout", d => mouseout(d.id));
+            //TODO: remove when no longer needed.
+           // cant.on("mouseover", d => mouseover(d.id));
+           // cant.on("mouseout", d => mouseout(d.id));
             cant.on("click", d => click(d.id));
 
             g.append("path")
@@ -170,6 +168,11 @@ function doPlot() {
 
 //------------------------ communication with region_selectors.js -------------------------
 
+/**
+ * updates cantonViews according to cantons2update.
+ * @param cantons2update - an array of cantonPMs.
+ * @param checked boolean.
+ */
 export function updateMapVisuals(cantons2update, checked){
 
     cantons2update.forEach( function(currentCanton){

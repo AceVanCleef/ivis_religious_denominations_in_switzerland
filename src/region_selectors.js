@@ -29,10 +29,14 @@ const regions = [
 //2. get checkbox elements from DOM.
 const checkboxSelection = d3.selectAll('#swiss-regions input');
 
+//--------------------------- main() Entry Point -------------------------
 
 export function setupRegionSelectors() {
     checkboxSelection.on("click", handleUserInput);
 }
+
+//------------------------ EventHandler Callbacks -------------------------
+
 
 function handleUserInput() {
     var checkbox = this;
