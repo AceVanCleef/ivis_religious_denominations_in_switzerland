@@ -1,4 +1,5 @@
 import {selectedCantons} from "./swiss_map.1.0.js";
+import {updateMapVisuals} from "./swiss_map.1.0.js";
 
 /**
  * deals with form#swiss-regions checkboxes
@@ -25,21 +26,20 @@ const regions = [
 
 export function setupRegionSelectors() {
     //strategy:
-    //1. prepare dictionaries like dict<region-code, iso[]>
+    //1. prepare dictionaries like dict<region-code, iso[]>. See var regions.
 
     /* Potentially helpful links
     *   http://jsfiddle.net/fjaeger/L9z9t04p/4/
     *   https://stackoverflow.com/questions/5539139/change-get-check-state-of-checkbox
     *   https://blog.garstasio.com/you-dont-need-jquery/events/
-    * */
+    * *//*
     console.log("test getElementBy");
     console.log( d3.selectAll('#swiss-regions input')._groups.shift());
     var allCheckboxes = d3.selectAll('#swiss-regions input')._groups.shift();
     allCheckboxes.forEach( function(e){
        e.checked = true;
-    });
+    });*/
 
-    setUpEventHandlerFor( d3.selectAll('#swiss-regions input'),  click);
     //2. get checkbox elements from DOM.
     var checkboxSelection = d3.selectAll('#swiss-regions input');
 
@@ -49,24 +49,50 @@ export function setupRegionSelectors() {
     *  https://stackoverflow.com/questions/28723447/getting-the-properties-of-an-element-in-d3-is-not-elegant
     *  https://stackoverflow.com/questions/19849738/checkbox-check-uncheck-using-d3
     * */
-    checkboxSelection.on("click", click);
+    checkboxSelection.on("click", updateMap);
 }
 
-function setUpEventHandlerFor(d3Selection, callbackFunc) {
-    //source: http://www.tutorialsteacher.com/d3js/event-handling-in-d3js
 
-    console.log("d3 d3Checkboxes:");
-    console.log(d3Selection.nodes());
-    d3Selection.on("click", function(){
-        // this = the DOM element itself such as <input>.
-        // this allows access to its attributes, such as
-        // this.checked for example
-        // d3.select(this) converts DOM element to a d3.selection,
-        // allowing access to d3 helper functions.
-        console.log("inside eventhandler");
-        console.log(d3.select(this));
-        console.log(this.checked);
-    });
+function updateMap() {
+    // TODO:
+    // 1. Find out, which checkbox has been clicked.
+    // 2. update selectedCantons from swiss-map.1.0.js
+    // 3. update map visuals
+    // 4. inform line graph.
+
+    console.log("updateMap:");
+
+    //    var cbAsSelection = d3.select(this);
+
+    var checkbox = this;
+    var checkboxCode = checkbox.getAttribute('value');
+    var cantonList = regions.find(r => r.code === checkboxCode).cantons;
+    console.log(checkboxCode);
+    console.log(cantonList);
+    var relevantCantons = updateSelectedCantons(cantonList, checkbox.checked);
+    updateMapVisuals(relevantCantons, checkbox.checked);
+}
+
+function updateSelectedCantons(cantonList, checked) {
+    //1. get all relevant selectedCantons which are listed in cantonList
+    //2. set their isSelected attribute according to checked.
+    var relevantCantons = [];
+    for (var i = 0; i < selectedCantons.length; ++i) {
+        for (var j = 0; j < cantonList.length; ++j) {
+            if (selectedCantons[i].iso === cantonList[j]){
+                relevantCantons.push(selectedCantons[i]);
+            }
+        }
+    }
+    console.log("found cantons:");
+    if (checked) {
+        relevantCantons.forEach(e => e.isSelected = true);
+    } else {
+        relevantCantons.forEach(e => e.isSelected = false);
+    }
+    console.log(relevantCantons);
+    return relevantCantons
+
 }
 
 function click() {

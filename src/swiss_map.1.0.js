@@ -1,4 +1,6 @@
 import {toggleCSSClass} from "./helper_lib.js";
+import {addCSSClass} from "./helper_lib.js";
+import {removeCSSClass} from "./helper_lib.js";
 
 // create svg canvas
 const canvHeight = 375, canvWidth = 600;
@@ -131,4 +133,20 @@ function doPlot() {
                 .attr("dy", ".35em")
                 .text(function(d) { return d.properties.name; });
         });
+}
+
+
+//------------------------ communication with region_selectors.js -------------------------
+
+export function updateMapVisuals(relevantCantons, checked){
+
+    relevantCantons.forEach( function(currentCanton){
+        if (checked){
+            addCSSClass(currentCanton.iso, "selected-canton");
+        } else {
+            removeCSSClass(currentCanton.iso, "selected-canton");
+        }
+    });
+
+
 }
