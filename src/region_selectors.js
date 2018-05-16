@@ -5,16 +5,27 @@ import {selectedCantons} from "./swiss_map.1.0.js";
  */
 
 const regions = [
-    { name: "Ostschweiz", code: "OCH", cantons: ["AI","AR","GL","GR","SG","SH","TG"]},
-    {}
-    //continue here
+    //BFS regions
+    { name: "Ostschweiz",       code: "OCH",    cantons: ["AI","AR","GL","GR","SG","SH","TG"]},
+    { name: "Zuerich",          code: "ZH",     cantons:["ZH"]},
+    { name: "Zentralschweiz",   code: "ZS",     cantons:["LU", "NW", "OW", "SZ", "UR", "ZG"]},
+    { name: "Nordwestschweiz",  code: "NW",     cantons:["AG", "BL", "BS"]},
+    { name: "EspaceMittelland", code: "EML",    cantons:["BE", "FR", "JU", "NE", "SO"]},
+    { name: "Genferseeregion",  code: "GSR",    cantons:["GE", "VD", "VS"]},
+    { name: "Tessin",           code: "TI",     cantons:["TI"]},
+    // topographical regions
+    { name: "Jura",             code: "Jura",   cantons:["BL", "JU", "NE", "SO"]},
+    { name: "Mittelland",       code: "Mittelland", cantons:["AG", "BS", "FR", "GE", "SH", "TG", "VD", "ZG", "ZH"]},
+    { name: "Alpen",            code: "Alpen",  cantons:["AI", "AR", "BE", "GL", "GR", "LU", "NW", "OW", "SG", "SZ", "TI", "UR", "VS"]},
+    //whole country of CH
+    { name: "Schweiz",          code: "CH",
+        cantons: ["AG", "AI", "AR", "BE", "BL", "BS", "FR", "GE", "GL", "GR", "JU", "LU", "NE", "NW", "OW", "SG", "SH", "SO", "SZ", "TG", "TI", "UR", "VD", "VS", "ZG", "ZH"]
+    }
 ];
 
 export function setupRegionSelectors() {
     //strategy:
     //1. prepare dictionaries like dict<region-code, iso[]>
-    //2. get checkbox elements from DOM. Maybe as per <section> or not.
-    //3. using d3's on(), register eventhandlers and define callback functions.
 
     /* Potentially helpful links
     *   http://jsfiddle.net/fjaeger/L9z9t04p/4/
@@ -29,9 +40,16 @@ export function setupRegionSelectors() {
     });
 
     setUpEventHandlerFor( d3.selectAll('#swiss-regions input'),  click);
+    //2. get checkbox elements from DOM.
+    var checkboxSelection = d3.selectAll('#swiss-regions input');
 
-    d3.selectAll('#swiss-regions input')
-        .on("click", click);
+    //3. using d3's on(), register eventhandlers and define callback functions.
+    /* Helpful links:
+    *  http://www.tutorialsteacher.com/d3js/event-handling-in-d3js
+    *  https://stackoverflow.com/questions/28723447/getting-the-properties-of-an-element-in-d3-is-not-elegant
+    *  https://stackoverflow.com/questions/19849738/checkbox-check-uncheck-using-d3
+    * */
+    checkboxSelection.on("click", click);
 }
 
 function setUpEventHandlerFor(d3Selection, callbackFunc) {

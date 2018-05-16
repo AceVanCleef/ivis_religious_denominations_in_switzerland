@@ -103,6 +103,9 @@ function doPlot() {
             });
             populateSelectedCantons(cantonIDs);
 
+            console.log("console ids");
+            console.log(cantonIDs);
+
             var cant = g.selectAll("path.canton")
                     .data(cantons.features)
                     .enter()
