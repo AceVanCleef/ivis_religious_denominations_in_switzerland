@@ -1,6 +1,8 @@
 import {toggleCSSClass} from "./helper_lib.js";
 import {addCSSClass} from "./helper_lib.js";
 import {removeCSSClass} from "./helper_lib.js";
+import {updateCheckboxes} from "./region_selectors.js";
+
 
 // create svg canvas
 const canvHeight = 375, canvWidth = 600;
@@ -78,6 +80,7 @@ function click(cantonId) {
     // yourUpdateFunctoinHere();
 
     toggleCSSClass(currentCanton.iso, "selected-canton");
+    updateCheckboxes();
 }
 
 

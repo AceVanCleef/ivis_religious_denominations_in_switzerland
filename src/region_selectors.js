@@ -60,7 +60,7 @@ function handleUserInput() {
     updateCheckboxes();
 }
 
-function updateCheckboxes() {
+export function updateCheckboxes() {
     // 1. go through selectedCantons and verify whether they must be checked or not
     // 1.2. they must be checked when all their cantons[]
     //      elements are mark3ed as isSelected in selectedCantons
