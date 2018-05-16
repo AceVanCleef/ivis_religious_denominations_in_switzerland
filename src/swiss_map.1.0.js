@@ -40,7 +40,7 @@ export function initSwissMap(){
 // holds the state of each canton whether it is selected or not.
 export const cantonsPM = [];
 
-function createSelectedCantonObj(cantonId) {
+function createCantonPM(cantonId) {
     return {
         iso: cantonId,
         isSelected: false // on page loaded, must be false.
@@ -50,8 +50,37 @@ function createSelectedCantonObj(cantonId) {
 function populateCantonsPM(cantonIDs) {
     const sortedCantonIDs = cantonIDs.sort();
     sortedCantonIDs.forEach( function(id) {
-        cantonsPM.push( createSelectedCantonObj(id) );
+        cantonsPM.push( createCantonPM(id) );
     });
+}
+
+/**
+ * updates the state of all cantonPMs according to cantonISOs[] and
+ * returns the updated cantonPMs.
+ * @param cantonISOs such as ["AG", "BE", "TG"]. Defines which cantons will be updated.
+ * @param checked whether the clicked checkbox is checked or not.
+ * @returns {Array} updated cantonPMs.
+ */
+export function updateCantonsPM(cantonISOs, checked) {
+    var cantons2update = filterCantonsBy(cantonISOs);
+    if (checked) {
+        cantons2update.forEach(e => e.isSelected = true);
+    } else {
+        cantons2update.forEach(e => e.isSelected = false);
+    }
+    return cantons2update
+}
+
+function filterCantonsBy(cantonISOs) {
+    var selectedCantonPMs = [];
+    for (var i = 0; i < cantonsPM.length; ++i) {
+        for (var j = 0; j < cantonISOs.length; ++j) {
+            if (cantonsPM[i].iso === cantonISOs[j]){
+                selectedCantonPMs.push(cantonsPM[i]);
+            }
+        }
+    }
+    return selectedCantonPMs;
 }
 
 
