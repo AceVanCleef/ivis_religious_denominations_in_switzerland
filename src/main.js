@@ -1,6 +1,7 @@
 import {pointToPointChart} from "./point-to-point-chart.js";
 import {initSwissMap} from "./swiss_map.1.0.js";
 import {setupRegionSelectors} from "./region_selectors.js";
+import {setupReligionSelectors} from "./religion_selectors.js";
 
 
 
@@ -16,13 +17,14 @@ export function main(data, dataGroupedByYear){
     console.log(dataGroupedByYear);
     initSwissMap();
     setupRegionSelectors();
+    setupReligionSelectors();
     pointToPointChart(data);
 }
 
 
 //------------------------ Helper functions -------------------------
 
-
+/*
 function getCantonNamesFrom(dataGroupedByYear) {
     console.log("getCantonNamesFrom");
     var cantonNames = dataGroupedByYear[0].kantone.map(function(e){
@@ -40,3 +42,4 @@ function getISOsFrom(dataGroupedByYear) {
     console.log((cantonISOs));
     return cantonISOs;
 }
+    */

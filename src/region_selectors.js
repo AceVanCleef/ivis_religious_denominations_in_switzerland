@@ -1,6 +1,7 @@
 import {cantonsPM} from "./swiss_map.1.0.js";
 import {updateMapVisuals} from "./swiss_map.1.0.js";
 import {updateCantonsPM} from "./swiss_map.1.0.js";
+import {createHtmlInputElementOfType} from "./helper_lib.js";
 
 /**
  * deals with form#swiss-regions checkboxes
@@ -9,29 +10,33 @@ import {updateCantonsPM} from "./swiss_map.1.0.js";
 //1. prepare dictionaries like dict<region-code, iso[]>.
 const regions = [
     //BFS regions
-    { name: "Ostschweiz",       code: "_OCH",    cantons: ["AI","AR","GL","GR","SG","SH","TG"]},
-    { name: "Zuerich",          code: "_ZH",     cantons:["ZH"]},
-    { name: "Zentralschweiz",   code: "_ZS",     cantons:["LU", "NW", "OW", "SZ", "UR", "ZG"]},
-    { name: "Nordwestschweiz",  code: "_NW",     cantons:["AG", "BL", "BS"]},
-    { name: "EspaceMittelland", code: "_EML",    cantons:["BE", "FR", "JU", "NE", "SO"]},
-    { name: "Genferseeregion",  code: "_GSR",    cantons:["GE", "VD", "VS"]},
-    { name: "Tessin",           code: "_TIC",     cantons:["TI"]},
+    { name: "Ostschweiz",       code: "_OCH",   parentId: "bfs-regions",    cantons: ["AI","AR","GL","GR","SG","SH","TG"]},
+    { name: "Zuerich",          code: "_ZH",    parentId: "bfs-regions",    cantons:["ZH"]},
+    { name: "Zentralschweiz",   code: "_ZS",    parentId: "bfs-regions",    cantons:["LU", "NW", "OW", "SZ", "UR", "ZG"]},
+    { name: "Nordwestschweiz",  code: "_NW",    parentId: "bfs-regions",    cantons:["AG", "BL", "BS"]},
+    { name: "EspaceMittelland", code: "_EML",   parentId: "bfs-regions",    cantons:["BE", "FR", "JU", "NE", "SO"]},
+    { name: "Genferseeregion",  code: "_GSR",   parentId: "bfs-regions",    cantons:["GE", "VD", "VS"]},
+    { name: "Tessin",           code: "_TIC",   parentId: "bfs-regions",    cantons:["TI"]},
     // topographical regions
-    { name: "Jura",             code: "_Jura",   cantons:["BL", "JU", "NE", "SO"]},
-    { name: "Mittelland",       code: "_Mittelland", cantons:["AG", "BS", "FR", "GE", "SH", "TG", "VD", "ZG", "ZH"]},
-    { name: "Alpen",            code: "_Alpen",  cantons:["AI", "AR", "BE", "GL", "GR", "LU", "NW", "OW", "SG", "SZ", "TI", "UR", "VS"]},
+    { name: "Jura",             code: "_Jura",      parentId: "topographical-regions",    cantons:["BL", "JU", "NE", "SO"]},
+    { name: "Mittelland",       code: "_Mittelland",parentId: "topographical-regions",    cantons:["AG", "BS", "FR", "GE", "SH", "TG", "VD", "ZG", "ZH"]},
+    { name: "Alpen",            code: "_Alpen",     parentId: "topographical-regions",    cantons:["AI", "AR", "BE", "GL", "GR", "LU", "NW", "OW", "SG", "SZ", "TI", "UR", "VS"]},
     //whole country of CH
-    { name: "Schweiz",          code: "_CH",
+    { name: "Schweiz",          code: "_CH",    parentId: "all-regions",
         cantons: ["AG", "AI", "AR", "BE", "BL", "BS", "FR", "GE", "GL", "GR", "JU", "LU", "NE", "NW", "OW", "SG", "SH", "SO", "SZ", "TG", "TI", "UR", "VD", "VS", "ZG", "ZH"]
     }
 ];
 
 //2. get checkbox elements from DOM.
-const checkboxSelection = d3.selectAll('#swiss-regions input');
+var checkboxSelection;
 
 //--------------------------- main() Entry Point -------------------------
 
 export function setupRegionSelectors() {
+    regions.forEach( region => {
+        createHtmlInputElementOfType("checkbox", region.name, region.code, region.code, region.name, region.parentId, true);
+    });
+    checkboxSelection = d3.selectAll('#swiss-regions input');
     checkboxSelection.on("click", handleUserInput);
 }
 

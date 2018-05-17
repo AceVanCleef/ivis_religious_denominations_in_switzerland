@@ -9,58 +9,35 @@
 <!-- put your stuff here -->
 <form id="swiss-regions">
   <!-- Grossregionen gemäss https://de.wikipedia.org/wiki/Liste_der_Regionen_in_der_Schweiz-->
-  <input type="checkbox" name="Schweiz" value="_CH" id="_CH">Ganze Schweiz
-  <br/>
+  <section id="all-regions">
+    <!-- auto-generated checkboxes here -->
+  </section>
   <section id="bfs-regions">
     <p>Grossregionen gemäss BFS</p>
-    <input type="checkbox" name="Ostschweiz" value="_OCH" id="_OCH">Ostschweiz
-    <br/>
-    <input type="checkbox" name="Zuerich" value="_ZH" id="_ZH">Zürich
-    <br/>
-    <input type="checkbox" name="Zentralschweiz" value="_ZS" id="_ZS">Zentralschweiz
-    <br/>
-    <input type="checkbox" name="Nordwestschweiz" value="_NW" id="_NW">Nordwestschweiz
-    <br/>
-    <input type="checkbox" name="EspaceMittelland" value="_EML" id="_EML">Espace Mittelland
-    <br/>
-    <input type="checkbox" name="Genferseeregion" value="_GSR" id="_GSR">Genferseeregion
-    <br/>
-    <input type="checkbox" name="Tessin" value="_TIC" id="_TIC">Tessin
+    <!-- auto-generated checkboxes here -->
   </section>
   <section id="topographical-regions">
     <p>Topographische Regionen</p>
-    <input type="checkbox" name="Jura" value="_Jura" id="_Jura">Jura
-    <br/>
-    <input type="checkbox" name="Mittelland" value="_Mittelland" id="_Mittelland">Mittelland
-    <br/>
-    <input type="checkbox" name="Alpen" value="_Alpen" id="_Alpen">Alpen
-    <br/>
+    <!-- auto-generated checkboxes here -->
   </section>
 </form>
 
 <form id="religions">
-  <input type="checkbox" name="alleReligionen" value="_allRel" id="_allRel">alle Religionen
-  <br/>
+  <section id="all-religions">
+
+  </section>
   <section id="christian-religions">
     <p>Christentum</p>
-    <input type="checkbox" name="katholiken" value="_kathChr" id="_kathChr">katholiken
-    <br/>
-    <input type="checkbox" name="reformierte" value="_refChr" id="_refChr">reformierte
-    <br/>
-    <input type="checkbox" name="andereChristen" value="_otherChr" id="_otherChr">andere Christen
-    <br/>
+    <!-- auto-generated checkboxes here -->
   </section>
   <section id="other-religions">
     <p>Andere Religionen</p>
-    <input type="checkbox" name="Judentum" value="_jud" id="_jud">Juden
-    <br/>
-    <input type="checkbox" name="Islamisten" value="_islam" id="_islam">Islamisten
-    <br/>
-    <input type="checkbox" name="andereReligionen" value="_otherRel" id="_otherRel">andere Religionen
-    <br/>
+    <!-- auto-generated checkboxes here -->
   </section>
-  <p>Konfessionslos</p>
-  <input type="checkbox" name="Konfessionslos" value="_konf" id="_konf">Konfessionslose
+  <section id="no-religion">
+    <p>Konfessionslos</p>
+    <!-- auto-generated checkboxes here -->
+  </section>
 </form>
 
 
@@ -83,6 +60,7 @@ multiple files but must be added before point-to-point-chart.js using <script> t
 <script src='src/load-data.js' type='module'></script>
 <script src='src/swiss_map.1.0.js' type='module'></script>
 <script src='src/region_selectors.js' type='module'></script>
+<script src='src/religion_selectors.js' type='module'></script>
 <script src='src/main.js' type='module'></script>
 </body>
 </html>
