@@ -9,6 +9,7 @@ const canvHeight = 375, canvWidth = 600;
 const svg = d3.select("body").append("svg")
     .attr("width", canvWidth)
     .attr("height", canvHeight)
+    .attr("id", "swiss-map")
     .style("border", "1px solid");
 
 // calc the width and height depending on margins.
