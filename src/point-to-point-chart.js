@@ -4,6 +4,7 @@ function pointToPointChart(data, dataGroupedByYear) {
     dataGroupedByYear[0].kantone.forEach(canton => allCantons.push({name: canton.kanton, iso: 'hb', isSelected: 'false'}));
     allCantons[4].isSelected = true;
     allCantons[24].isSelected = true;
+    allCantons[22].isSelected = true;
     console.log(allCantons.filter(element => element.isSelected === true));
 
     const indexB = 3;
@@ -16,19 +17,56 @@ function pointToPointChart(data, dataGroupedByYear) {
         data[indexB].konfessionslose +
         data[indexB].reformierte
     );
-
     const allReligions = [
-        {name: 'andere_christen', isSelected: 'false'},
-        {name: 'andere_religionen', isSelected: 'false'},
-        {name: 'islamisten', isSelected: 'true'},
-        {name: 'juden', isSelected: 'false'},
-        {name: 'katholiken', isSelected: 'false'},
-        {name: 'konfessionslose', isSelected: 'true'},
-        {name: 'reformierte', isSelected: 'false'}
+        {name: 'andere_christen', isSelected: false},
+        {name: 'andere_religionen', isSelected: true},
+        {name: 'islamisten', isSelected: true},
+        {name: 'juden', isSelected: false},
+        {name: 'katholiken', isSelected: false},
+        {name: 'konfessionslose', isSelected: true},
+        {name: 'reformierte', isSelected: false}
     ];
 
-    const selectedCantons = allCantons.filter(canton => canton.isSelected === true).map(canton => canton.name);
-    const selectedReligions = allReligions.filter(religion => regligion.isSelected === true).map(religion => religion.name);
+    const allYears = [
+        {name: 2011, isSelected: true},
+        {name: 2012, isSelected: true},
+        {name: 2013, isSelected: true},
+        {name: 2014, isSelected: true},
+        {name: 2015, isSelected: true},
+        {name: 2016, isSelected: true}
+    ];
+    console.log(allYears);
+
+    const cantonsPM = allCantons.filter(canton => canton.isSelected === true).map(canton => canton.name);
+    const religionsPM = allReligions.filter(religion => religion.isSelected === true).map(religion => religion.name);
+    const yearsPM = allYears.filter(year => year.isSelected === true).map(year => year.name);
+    const superdata = data.filter(element => cantonsPM.includes(element.kanton) && yearsPM.includes(element.jahr));
+    console.log('sali');
+    console.log(superdata);
+
+        allReligions.forEach(element => element.facts = {});
+        // let religions = [
+        // andere_christen: 0,
+        // let andere_religionen = 0;
+        // let islamisten = 0;
+        // let juden = 0;
+        // let katholiken = 0;
+        // let konfessionslose = 0;
+        // let reformierte = 0;
+        // ];
+
+        superdata.forEach(element => {
+            allReligions.filter(element => element.name === 'andere_christen')['count'] += element.andere_christen;
+            allReligions.filter(element => element.name === 'andere_religionen')['count'] += element.andere_religionen;
+            allReligions.filter(element => element.name === 'islamisten')['count'] += element.islamisten;
+            allReligions.filter(element => element.name === 'juden')['count'] += element.juden;
+            allReligions.filter(element => element.name === 'katholiken')['count'] += element.katholiken;
+            allReligions.filter(element => element.name === 'konfessionslose')['count'] += element.konfessionslose;
+            allReligions.filter(element => element.name === 'reformierte')['count'] += element.reformierte;
+        });
+
+
+
 
 
     // create svg canvas
@@ -45,13 +83,13 @@ function pointToPointChart(data, dataGroupedByYear) {
 
     // create parent group and add left and top margin
     const g = svg.append("g")
-        .attr("id", "chart-area")
+        .attr("id", "point-to-point-chart")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // create domain for supporter axis
     let allSupporters = [];
     data.forEach(element => {
-        if (selectedCantons.includes(element.kanton)) {
+        if (cantonsPM.includes(element.kanton)) {
             allSupporters.push(element.andere_christen);
             allSupporters.push(element.andere_religionen);
             allSupporters.push(element.islamisten);
@@ -62,13 +100,11 @@ function pointToPointChart(data, dataGroupedByYear) {
         }
     });
     const countMax = d3.max(allSupporters);
-
     const countDomain = [0, countMax];
 
     // create domain for year axis
-    const allYears = Array.from(new Set(data.map(d => d.jahr)));
-    const yearMax = d3.max(allYears);
-    const yearMin = d3.min(allYears);
+    const yearMax = d3.max(yearsPM);
+    const yearMin = d3.min(yearsPM);
     const yearDomain = [yearMin, yearMax];
 
     // create scales for x and y direction
@@ -82,7 +118,7 @@ function pointToPointChart(data, dataGroupedByYear) {
 
     // create xAxis
     const xAxis = d3.axisBottom(xScale)
-        .tickValues(allYears)
+        .tickValues(yearsPM)
         .tickFormat(d3.format('.0f'));
     g.append("g")  // create a group and add axis
         .attr("transform", "translate(0," + height + ")")
@@ -95,23 +131,61 @@ function pointToPointChart(data, dataGroupedByYear) {
 
 
     // filter data
-    const filteredData = data.filter(element => {
-        if (selectedCantons.includes(element.kanton)) {
-            return {religion: element.religion}
-        }
-    });
+    // const filteredData = data.forEach(element => {
+    //     if (cantonsPM.includes(element.kanton)) {
+    //         return element;
+    //     }
+    // });
 
-    console.log(filteredData);
+    console.log(allCantons);
+    console.log(religionsPM);
 
     // add circle
-    let data_points = g.selectAll("circle")  // this is just an empty placeholder
-        .data(filteredData)
-        .enter().append("circle")
-        .attr("class", "point")
-        .attr("cx", d => xScale(d.jahr))
-        .attr("cy", d => yScale(d.katholiken))
-        .attr("r", 4);
+    religionsPM.forEach(religion => {
+        let religionGroup = g.append("g").attr("class", `points__${religion}`);
 
+        let counter = 0;
+        let cordinatesFromPreviousCircle = {cx: 0, cy: 0};
+
+        yearsPM.forEach(year => {
+            const filteredData = superdata.filter(element => element.jahr === year);
+            let religionCount = 0;
+            filteredData.forEach(element =>
+                religionCount += element[religion]
+            );
+
+            let yearGroup = religionGroup.append("g").attr("class", `points__${year}`);
+
+            yearGroup.append("circle")
+                .attr("class", `point__${religion}-${year}`)
+                .attr("cx", xScale(year))
+                .attr("cy", yScale(religionCount))
+                .attr("r", 4);
+
+            if (counter > 0) {
+                religionGroup.append("line")
+                    .attr("class", `line__${religion}-${year}`)
+                    .attr("x1", cordinatesFromPreviousCircle.cx)
+                    .attr("y1", cordinatesFromPreviousCircle.cy)
+                    .attr("x2", xScale(year))
+                    .attr("y2",yScale(religionCount))
+                    .attr("stroke", "red");
+            }
+
+            cordinatesFromPreviousCircle.cx = xScale(year);
+            cordinatesFromPreviousCircle.cy = yScale(religionCount);
+
+            ++counter;
+            console.log(counter);
+        });
+
+
+
+
+    });
+
+
+    console.log("hallo");
 
     // text label for the y axis
     g.append("text")
