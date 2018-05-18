@@ -1,4 +1,4 @@
-import {pointToPointChart} from "./point-to-point-chart.js";
+import {setupPointToPointChart} from "./point-to-point-chart.js";
 import {initSwissMap} from "./swiss_map.1.0.js";
 import {setupRegionSelectors} from "./region_selectors.js";
 import {setupReligionSelectors} from "./religion_selectors.js";
@@ -16,10 +16,10 @@ export function main(data, dataGroupedByYear){
     console.log(data);
     console.log("grouped data in main:");
     console.log(dataGroupedByYear);
+    setupPointToPointChart(data, dataGroupedByYear);
     initSwissMap();
     setupRegionSelectors();
     setupReligionSelectors();
-    pointToPointChart(data, dataGroupedByYear);
     setupYearsSelector( getAllYearsFrom(dataGroupedByYear) );
 }
 
