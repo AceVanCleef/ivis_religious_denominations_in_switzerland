@@ -19,7 +19,7 @@ export function main(data, dataGroupedByYear){
     initSwissMap();
     setupRegionSelectors();
     setupReligionSelectors();
-    setupYearsSelector();
+    setupYearsSelector( getAllYearsFrom(dataGroupedByYear) );
     pointToPointChart(data);
 }
 
@@ -45,3 +45,8 @@ function getISOsFrom(dataGroupedByYear) {
     return cantonISOs;
 }
     */
+
+function getAllYearsFrom(dataGroupedByYear) {
+    var years = dataGroupedByYear.map(e => e.year);
+    return years.sort(function(a, b){return a - b});
+}

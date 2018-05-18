@@ -5,6 +5,16 @@
   <meta charset="utf-8"/>
   <link rel="stylesheet" type="text/css" href="css/swiss-map.css">
   <link rel="stylesheet" type="text/css" href="css/nouislider.min.css">
+
+  <style>
+    /* noUiSlider custom css */
+    .noUi-tooltip {
+      display: none;
+    }
+    .noUi-active .noUi-tooltip {
+      display: block;
+    }
+  </style>
 </head>
 <body>
 <!-- put your stuff here -->
@@ -50,6 +60,7 @@
 <script src='lib/d3-v4.js'></script>
 <script src='lib/lodash.js'></script>
 <script src="lib/topojson.v2.min.js"></script>
+<script src="lib/wNumb.js"></script>
 <script src="lib/nouislider.min.js"><!-- source: https://refreshless.com/nouislider/--></script>
 <!-- internal js code -->
 <!-- Note: For readability, code can be devided into 
