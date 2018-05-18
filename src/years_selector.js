@@ -7,8 +7,6 @@ export const yearsPM = [];
 
 export function setupYearsSelector( allYears ) {
     var slider = document.getElementById('years-slider');
-    console.log("setupYearsSelector");
-
 
     noUiSlider.create(slider, {
         start: [getFirstYearFrom(allYears), getLastYearFrom(allYears)],    //element count == amount of slider handles.
