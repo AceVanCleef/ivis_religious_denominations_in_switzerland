@@ -36,7 +36,25 @@ export function setupYearsSelector( allYears ) {
     console.log(yearsPM);
 
     //Todo: read slider values and update years.PM on change.
+    slider.noUiSlider.on("change", handleUserInput);
+
 }
+
+function handleUserInput( values, handle, unencoded, tap, positions ) {
+    // values: Current slider values (array);
+    // handle: Handle that caused the event (number);
+    // unencoded: Slider values without formatting (array);
+    // tap: Event was caused by the user tapping the slider (boolean);
+    // positions: Left offset of the handles (array);
+    // isSelected = true for all in intervall [unencoded[0], unencoded[1]] -> unencoded[0] <= y.year <= unencoded[1]
+    yearsPM.forEach(y => {
+       y.isSelected = (unencoded[0] <= y.year && y.year <= unencoded[1]);
+    });
+
+    //TODO: inform line graph.
+    
+}
+
 
 function populateYearsPM(allYears) {
     allYears.forEach(y => yearsPM.push( createYearPM(y) ));
