@@ -47,7 +47,6 @@ export function createHtmlInputElementOfType(_type, _name, _value, _id, _labelte
     input.name = _name;
     input.id = _id;
     input.value = _value;
-    console.log(_type, _name, _value, _id, _labeltext, _parentID);
     //package DOM elements
     label.appendChild(input);
     label.appendChild(text);
@@ -56,7 +55,6 @@ export function createHtmlInputElementOfType(_type, _name, _value, _id, _labelte
     parent.appendChild(label);
 
     if (_withLineBreak){
-        console.log("holy shit");
         var br = document.createElement('br');
         parent.appendChild(br);
     }

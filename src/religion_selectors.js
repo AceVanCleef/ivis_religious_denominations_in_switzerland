@@ -8,7 +8,6 @@ export const religionsPM = [
     //all religions
     { name: "alle_religionen",  id: "_alle_religionen", labeltext: "Alle Religionen",   parentid: "all-religions",    isSelected: false },
     //Christianity
-    { name: "alle_christen",    id: "_alle_christen",   labeltext: "Alle Christen",     parentid: "christian-religions",    isSelected: false },
     { name: "katholiken",       id: "_katholiken",      labeltext: "katholiken",        parentid: "christian-religions",    isSelected: false },
     { name: "reformierte",      id: "_reformierte",     labeltext: "reformierte",       parentid: "christian-religions",    isSelected: false },
     { name: "andere_christen",  id: "_andere_christen", labeltext: "andere Christen",   parentid: "christian-religions",    isSelected: false },
@@ -21,17 +20,29 @@ export const religionsPM = [
 ];
 
 export function setupReligionSelectors() {
-    //get parent elements
-    const form = d3.select('form#religions');
-    const christianReligions    = d3.select('section#christian-religions');
-    const otherReligions        = d3.select('section#other-religions');
 
     console.log("setUpReligionsSelectors:");
-    console.log(christianReligions.attr("id"));
 
     //create input elements while appending them to correct parent
     religionsPM.forEach( religion => {
         createHtmlInputElementOfType("checkbox", religion.name, religion.id, religion.id, religion.labeltext, religion.parentid, true);
     });
 
+    //setup eventhandler
+    var checkboxSelection = d3.selectAll('form#religions input');
+    checkboxSelection.on("click", handleUserInput);
+}
+
+function handleUserInput() {
+    //1. update religionsPM
+    //2. inform line graph
+    var checkbox = this;
+
+    religionsPM.forEach(religion => {
+        if (religion.id === checkbox.id) {
+            religion.isSelected = checkbox.checked;
+        }
+    });
+
+    //TODO: inform line graph.
 }
