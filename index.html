@@ -4,6 +4,7 @@
   <title>Religious Denominations in Switzerland</title>
   <meta charset="utf-8"/>
   <link rel="stylesheet" type="text/css" href="css/swiss-map.css">
+  <link rel="stylesheet" type="text/css" href="css/nouislider.min.css">
 </head>
 <body>
 <!-- put your stuff here -->
@@ -40,12 +41,16 @@
   </section>
 </form>
 
+<section id="years-slider">
+  <!-- auto-generated slider here -->
+</section>
 
 <!-- javascript -->
 <!-- external js libraries-->
 <script src='lib/d3-v4.js'></script>
 <script src='lib/lodash.js'></script>
 <script src="lib/topojson.v2.min.js"></script>
+<script src="lib/nouislider.min.js"><!-- source: https://refreshless.com/nouislider/--></script>
 <!-- internal js code -->
 <!-- Note: For readability, code can be devided into 
 multiple files but must be added before point-to-point-chart.js using <script> tag. -->
@@ -61,6 +66,7 @@ multiple files but must be added before point-to-point-chart.js using <script> t
 <script src='src/swiss_map.1.0.js' type='module'></script>
 <script src='src/region_selectors.js' type='module'></script>
 <script src='src/religion_selectors.js' type='module'></script>
+<script src='src/years_selector.js' type='module'></script>
 <script src='src/main.js' type='module'></script>
 </body>
 </html>

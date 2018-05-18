@@ -2,6 +2,7 @@ import {pointToPointChart} from "./point-to-point-chart.js";
 import {initSwissMap} from "./swiss_map.1.0.js";
 import {setupRegionSelectors} from "./region_selectors.js";
 import {setupReligionSelectors} from "./religion_selectors.js";
+import {setupYearsSelector} from "./years_selector.js";
 
 
 
@@ -18,6 +19,7 @@ export function main(data, dataGroupedByYear){
     initSwissMap();
     setupRegionSelectors();
     setupReligionSelectors();
+    setupYearsSelector();
     pointToPointChart(data);
 }
 
