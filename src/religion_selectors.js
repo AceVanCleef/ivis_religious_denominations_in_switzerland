@@ -1,4 +1,5 @@
 import {createHtmlInputElementOfType} from "./helper_lib.js";
+import {updateReligions} from "./point-to-point-chart.js";
 
 /**
  * deals with form#religions checkboxes
@@ -45,4 +46,5 @@ function handleUserInput() {
     });
 
     //TODO: inform line graph.
+    updateReligions();
 }
