@@ -1,3 +1,7 @@
+import {cantonsPM as hound} from "./swiss_map.1.0.js";
+import {religionsPM as cat} from "./religion_selectors.js";
+
+
 function pointToPointChart(data, dataGroupedByYear) {
     // just template data
     let allCantons = [];
@@ -5,6 +9,9 @@ function pointToPointChart(data, dataGroupedByYear) {
     allCantons[4].isSelected = true;
     allCantons[24].isSelected = true;
     allCantons[22].isSelected = true;
+
+    console.log("hani");
+    console.log(cat);
 
     const allReligions = [
         {name: 'andere_christen', isSelected: false},
@@ -24,26 +31,6 @@ function pointToPointChart(data, dataGroupedByYear) {
         {name: 2015, isSelected: true},
         {name: 2016, isSelected: true}
     ];
-
-    const cantonsPM = allCantons.filter(canton => canton.isSelected === true).map(canton => canton.name);
-    const religionsPM = allReligions.filter(religion => religion.isSelected === true).map(religion => religion.name);
-    const yearsPM = allYears.filter(year => year.isSelected === true).map(year => year.name);
-    const superdata = data.filter(element => cantonsPM.includes(element.kanton) && yearsPM.includes(element.jahr));
-
-
-        allReligions.forEach(element => element.facts = {});
-
-
-        superdata.forEach(element => {
-            allReligions.filter(element => element.name === 'andere_christen')['count'] += element.andere_christen;
-            allReligions.filter(element => element.name === 'andere_religionen')['count'] += element.andere_religionen;
-            allReligions.filter(element => element.name === 'islamisten')['count'] += element.islamisten;
-            allReligions.filter(element => element.name === 'juden')['count'] += element.juden;
-            allReligions.filter(element => element.name === 'katholiken')['count'] += element.katholiken;
-            allReligions.filter(element => element.name === 'konfessionslose')['count'] += element.konfessionslose;
-            allReligions.filter(element => element.name === 'reformierte')['count'] += element.reformierte;
-        });
-
 
 
 
@@ -68,7 +55,7 @@ function pointToPointChart(data, dataGroupedByYear) {
     // create domain for supporter axis
     let allSupporters = [];
     data.forEach(element => {
-        if (cantonsPM.includes(element.kanton)) {
+        if (cantonsToShow.includes(element.kanton)) {
             allSupporters.push(element.andere_christen);
             allSupporters.push(element.andere_religionen);
             allSupporters.push(element.islamisten);
@@ -82,8 +69,8 @@ function pointToPointChart(data, dataGroupedByYear) {
     const countDomain = [0, countMax];
 
     // create domain for year axis
-    const yearMax = d3.max(yearsPM);
-    const yearMin = d3.min(yearsPM);
+    const yearMax = d3.max(yearsToShow);
+    const yearMin = d3.min(yearsToShow);
     const yearDomain = [yearMin, yearMax];
 
     // create scales for x and y direction
@@ -97,7 +84,7 @@ function pointToPointChart(data, dataGroupedByYear) {
 
     // create xAxis
     const xAxis = d3.axisBottom(xScale)
-        .tickValues(yearsPM)
+        .tickValues(yearsToShow)
         .tickFormat(d3.format('.0f'));
     g.append("g")  // create a group and add axis
         .attr("transform", "translate(0," + height + ")")
@@ -119,14 +106,14 @@ function pointToPointChart(data, dataGroupedByYear) {
 
 
     // add circle
-    religionsPM.forEach(religion => {
+    religionsToShow.forEach(religion => {
         let religionGroup = g.append("g").attr("class", `points__${religion}`);
 
         let counter = 0;
         let cordinatesFromPreviousCircle = {cx: 0, cy: 0};
 
-        yearsPM.forEach(year => {
-            const filteredData = superdata.filter(element => element.jahr === year);
+        yearsToShow.forEach(year => {
+            const filteredData = selectedDataOnly.filter(element => element.jahr === year);
             let religionCount = 0;
             filteredData.forEach(element =>
                 religionCount += element[religion]
@@ -155,10 +142,6 @@ function pointToPointChart(data, dataGroupedByYear) {
 
             ++counter;
         });
-
-
-
-
     });
 
 
@@ -182,5 +165,13 @@ function pointToPointChart(data, dataGroupedByYear) {
         .style("text-anchor", "middle")
         .text("Jahr");
 };
+
+function one() {
+
+}
+
+function two() {
+
+}
 
 export {pointToPointChart};
