@@ -19,6 +19,33 @@ let height;
 let yScale;
 let xScale;
 
+const isoMapping = {
+    AR: "Aargau",
+    BE: "Bern",
+    BL: "Basel-Landschaft",
+    BS: "Basel-Stadt",
+    FR: "Freiburg",
+    GE: "Genf",
+    GL: "Glarus",
+    GR: "Graubünden",
+    JU: "Jura",
+    LU: "Luzern",
+    NE: "Neuenburg",
+    NW: "Nidwalden",
+    OW: "Obwalden",
+    SG: "St. Gallen",
+    SH: "Schaffhausen",
+    SO: "Solothurn",
+    SZ: "Schwyz",
+    TG: "Thurgau",
+    TI: "Tessin",
+    UR: "Uri",
+    VD: "Waadt",
+    VS: "Wallis",
+    ZG: "Zug",
+    ZH: "Zürich"
+};
+
 export function setupPointToPointChart(data, dataGroupedByYear) {
     allData = data;
     allDataGroupedByYear = dataGroupedByYear;
@@ -43,7 +70,7 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
 
     // initial data
     let allCantons = [];
-    allDataGroupedByYear[0].kantone.forEach(canton => allCantons.push({name: canton.kanton, iso: 'hb', isSelected: 'false'}));
+    allDataGroupedByYear[0].kantone.forEach(canton => allCantons.push({name: canton.kanton, iso: "ZH", isSelected: 'false'}));
     allCantons[4].isSelected = true;
     allCantons[24].isSelected = true;
     allCantons[22].isSelected = true;
@@ -95,11 +122,12 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
 }
 
 export function updateCantons() {
+    console.log(cantonsPM);
     cantonsToShow = getCantonsToShow(cantonsPM);
     selectedDataOnly = getSelectedDataOnly();
 
     // create scales for x and y direction
-    yScale = updateYScale(cantonsToShow);
+    yScale = updateYScale();
 
     // create yAxis
     updateYAxis();
@@ -109,6 +137,7 @@ export function updateCantons() {
 }
 
 export function updateReligions() {
+    console.log(religionsPM);
     religionsToShow = getReligionsToShow(religionsPM);
 
     // add circle
@@ -116,7 +145,7 @@ export function updateReligions() {
 }
 
 function getCantonsToShow(cantonsPM) {
-    return cantonsPM.filter(canton => canton.isSelected === true).map(canton => canton.name);
+    return cantonsPM.filter(canton => canton.isSelected === true).map(canton => isoMapping[canton.iso]);
 }
 
 function getReligionsToShow(religionsPM) {
@@ -132,21 +161,38 @@ function getSelectedDataOnly() {
 }
 
 function updateYScale() {
-    // create domain for supporter axis
     let allSupporters = [];
-    allData.forEach(element => {
-        if (cantonsToShow.includes(element.kanton)) {
-            allSupporters.push(element.andere_christen);
-            allSupporters.push(element.andere_religionen);
-            allSupporters.push(element.islamisten);
-            allSupporters.push(element.juden);
-            allSupporters.push(element.katholiken);
-            allSupporters.push(element.konfessionslose);
-            allSupporters.push(element.reformierte);
-        }
+    // create domain for supporter axis
+    yearsToShow.forEach(year => {
+        let allOtherChristians = 0;
+        let allOtherReligions = 0;
+        let allIslamists = 0;
+        let allJews = 0;
+        let allCatholics = 0;
+        let allConfessionless = 0;
+        let allReformed = 0;
+        selectedDataOnly
+            .filter(element => element.jahr === year)
+            .forEach(element => {
+            allOtherChristians += element.andere_christen;
+            allOtherReligions += element.andere_religionen;
+            allIslamists += element.islamisten;
+            allJews += element.juden;
+            allCatholics += element.katholiken;
+            allConfessionless += element.konfessionslose;
+            allReformed += element.reformierte;
+        });
+        allSupporters.push(allOtherChristians);
+        allSupporters.push(allOtherReligions);
+        allSupporters.push(allIslamists);
+        allSupporters.push(allJews);
+        allSupporters.push(allCatholics);
+        allSupporters.push(allConfessionless);
+        allSupporters.push(allReformed);
     });
     const supporterMax = d3.max(allSupporters);
     const supporterDomain = [0, supporterMax];
+    console.log(supporterMax);
 
     // create scale for y direction
     return d3.scaleLinear()
@@ -190,19 +236,23 @@ function createXLabel() {
 }
 
 function updateXAxis() {
+    g.select("#axis-x").remove();
     // create xAxis
     const xAxis = d3.axisBottom(xScale)
         .tickValues(yearsToShow)
         .tickFormat(d3.format('.0f'));
     g.append("g")  // create a group and add axis
+        .attr("id", "axis-x")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 }
 
 function updateYAxis() {
+    g.select("#axis-y").remove();
     // create yAxis
     const yAxis = d3.axisLeft(yScale);
     g.append("g")  // create a group and add axis
+        .attr("id", "axis-y")
         .call(yAxis);
 }
 

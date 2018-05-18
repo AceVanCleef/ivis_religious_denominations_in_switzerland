@@ -2,6 +2,7 @@ import {cantonsPM} from "./swiss_map.1.0.js";
 import {updateMapVisuals} from "./swiss_map.1.0.js";
 import {updateCantonsPM} from "./swiss_map.1.0.js";
 import {createHtmlInputElementOfType} from "./helper_lib.js";
+import {updateCantons} from "./point-to-point-chart.js";
 
 /**
  * deals with form#swiss-regions checkboxes
@@ -83,6 +84,7 @@ function updateMap(checkbox, cantonISOs) {
 
 
     //TODO: inform line graph.
+    updateCantons();
 }
 
 
