@@ -5,18 +5,7 @@ function pointToPointChart(data, dataGroupedByYear) {
     allCantons[4].isSelected = true;
     allCantons[24].isSelected = true;
     allCantons[22].isSelected = true;
-    console.log(allCantons.filter(element => element.isSelected === true));
 
-    const indexB = 3;
-    console.log(
-        data[indexB].andere_christen +
-        data[indexB].andere_religionen +
-        data[indexB].islamisten +
-        data[indexB].juden +
-        data[indexB].katholiken +
-        data[indexB].konfessionslose +
-        data[indexB].reformierte
-    );
     const allReligions = [
         {name: 'andere_christen', isSelected: false},
         {name: 'andere_religionen', isSelected: true},
@@ -35,25 +24,15 @@ function pointToPointChart(data, dataGroupedByYear) {
         {name: 2015, isSelected: true},
         {name: 2016, isSelected: true}
     ];
-    console.log(allYears);
 
     const cantonsPM = allCantons.filter(canton => canton.isSelected === true).map(canton => canton.name);
     const religionsPM = allReligions.filter(religion => religion.isSelected === true).map(religion => religion.name);
     const yearsPM = allYears.filter(year => year.isSelected === true).map(year => year.name);
     const superdata = data.filter(element => cantonsPM.includes(element.kanton) && yearsPM.includes(element.jahr));
-    console.log('sali');
-    console.log(superdata);
+
 
         allReligions.forEach(element => element.facts = {});
-        // let religions = [
-        // andere_christen: 0,
-        // let andere_religionen = 0;
-        // let islamisten = 0;
-        // let juden = 0;
-        // let katholiken = 0;
-        // let konfessionslose = 0;
-        // let reformierte = 0;
-        // ];
+
 
         superdata.forEach(element => {
             allReligions.filter(element => element.name === 'andere_christen')['count'] += element.andere_christen;
@@ -137,8 +116,7 @@ function pointToPointChart(data, dataGroupedByYear) {
     //     }
     // });
 
-    console.log(allCantons);
-    console.log(religionsPM);
+
 
     // add circle
     religionsPM.forEach(religion => {
@@ -176,7 +154,6 @@ function pointToPointChart(data, dataGroupedByYear) {
             cordinatesFromPreviousCircle.cy = yScale(religionCount);
 
             ++counter;
-            console.log(counter);
         });
 
 
@@ -185,7 +162,6 @@ function pointToPointChart(data, dataGroupedByYear) {
     });
 
 
-    console.log("hallo");
 
     // text label for the y axis
     g.append("text")
