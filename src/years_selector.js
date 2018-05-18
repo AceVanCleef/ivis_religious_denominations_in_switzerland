@@ -8,13 +8,7 @@ export const yearsPM = [];
 export function setupYearsSelector( allYears ) {
     var slider = document.getElementById('years-slider');
     console.log("setupYearsSelector");
-    console.log(slider);
-    console.log(allYears);
 
-    const firstYear = getFirstYearFrom(allYears);
-    const lastYear = getLastYearFrom(allYears);
-    console.log(firstYear);
-    console.log(lastYear);
 
     noUiSlider.create(slider, {
         start: [getFirstYearFrom(allYears), getLastYearFrom(allYears)],    //element count == amount of slider handles.
@@ -25,17 +19,16 @@ export function setupYearsSelector( allYears ) {
         range: {
             'min': getFirstYearFrom(allYears),
             'max': getLastYearFrom(allYears)
+        },
+        pips: {
+            mode: 'steps',
+            stepped: true,
+            density: -1
         }
     });
 
-    //testing slider movement
-   // allYears.forEach(y =>     slider.noUiSlider.set([y, null]) );
-
     populateYearsPM(allYears);
-    console.log("yearsPM:");
-    console.log(yearsPM);
 
-    //Todo: read slider values and update years.PM on change.
     slider.noUiSlider.on("change", handleUserInput);
 
 }
@@ -52,7 +45,7 @@ function handleUserInput( values, handle, unencoded, tap, positions ) {
     });
 
     //TODO: inform line graph.
-    
+
 }
 
 
