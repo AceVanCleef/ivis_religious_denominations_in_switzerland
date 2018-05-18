@@ -17,10 +17,10 @@ export function main(data, dataGroupedByYear){
     console.log("grouped data in main:");
     console.log(dataGroupedByYear);
     initSwissMap();
+    pointToPointChart(data, dataGroupedByYear);
     setupRegionSelectors();
     setupReligionSelectors();
     setupYearsSelector( getAllYearsFrom(dataGroupedByYear) );
-    pointToPointChart(data);
 }
 
 
