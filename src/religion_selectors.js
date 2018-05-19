@@ -44,7 +44,28 @@ function handleUserInput() {
             religion.isSelected = checkbox.checked;
         }
     });
+/*
+    console.log("uuuuuwaaauauuuuwwua:")
+    console.log(is_alleReligionenSelected());
+    if (is_alleReligionenSelected()) {
+        religionsPM.forEach(r => r.isSelected = true);
+    }
+    console.log(religionsPM);
 
-    //TODO: inform line graph.
+    if (areAllReligionsSelected) {
+        religionsPM.find(r => r.id === "_alle_religionen").isSelected = true;
+    }
+    console.log(religionsPM);*/
+
     updateReligions();
+}
+
+function is_alleReligionenSelected() {
+    return religionsPM.find(r => r.id === "_alle_religionen").isSelected;
+}
+
+function areAllReligionsSelected() {
+    var bool = religionsPM.slice(1,religionsPM.length).every(r => r.isSelected=== true);
+    console.log(bool);
+    return bool;
 }
