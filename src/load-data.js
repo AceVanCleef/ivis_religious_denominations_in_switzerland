@@ -1,6 +1,6 @@
 import {main} from "./main.js";
 
-d3.csv("/data/religions.csv", (d) => {
+d3.csv("./data/religions.csv", (d) => {
     return {
         kanton : d.kanton,
         jahr : +d.jahr,
