@@ -20,52 +20,49 @@ export const religionsPM = [
     { name: "konfessionslose",  id: "_konfessionslose", labeltext: "konfessionslose",   parentid: "no-religion",    isSelected: false }
 ];
 
+//var checkboxSelection;
+var allReligionsSelector;
+var individualReligions;
+
 export function setupReligionSelectors() {
-
-    console.log("setUpReligionsSelectors:");
-
     //create input elements while appending them to correct parent
     religionsPM.forEach( religion => {
         createHtmlInputElementOfType("checkbox", religion.name, religion.id, religion.id, religion.labeltext, religion.parentid, true);
     });
 
-    //setup eventhandler
-    var checkboxSelection = d3.selectAll('form#religions input');
-    checkboxSelection.on("click", handleUserInput);
+    //setup eventhandlers
+    allReligionsSelector = d3.select('#_alle_religionen');
+    allReligionsSelector.on("click", handleAllReligionsSelector);
+    individualReligions = d3.selectAll('form#religions input').filter(function(){ return this.id !== '_alle_religionen';});
+    individualReligions.on('click', handleIndividualReligions);
 }
 
-function handleUserInput() {
-    //1. update religionsPM
-    //2. inform line graph
+function handleIndividualReligions() {
+    // update religionPM.
     var checkbox = this;
+    var currentReligion = religionsPM.find(r => r.id === checkbox.id);
+    currentReligion.isSelected = checkbox.checked;
 
-    religionsPM.forEach(religion => {
-        if (religion.id === checkbox.id) {
-            religion.isSelected = checkbox.checked;
-        }
-    });
-/*
-    console.log("uuuuuwaaauauuuuwwua:")
-    console.log(is_alleReligionenSelected());
-    if (is_alleReligionenSelected()) {
-        religionsPM.forEach(r => r.isSelected = true);
-    }
-    console.log(religionsPM);
-
-    if (areAllReligionsSelected) {
-        religionsPM.find(r => r.id === "_alle_religionen").isSelected = true;
-    }
-    console.log(religionsPM);*/
+    allReligionsSelector.property('checked', areAllReligionsSelected());
+    religionsPM.find(r => r.id === '_alle_religionen').isSelected = areAllReligionsSelected();
 
     updateReligions();
 }
 
-function is_alleReligionenSelected() {
-    return religionsPM.find(r => r.id === "_alle_religionen").isSelected;
+function handleAllReligionsSelector() {
+    console.log("handleAllReligionsSelector:");
+    console.log(this);
+    var checkbox = this;
+
+    religionsPM.forEach(religion => {
+       religion.isSelected = checkbox.checked;
+       d3.select('#' + religion.id).property('checked', checkbox.checked);
+    });
+
+    updateReligions();
 }
 
 function areAllReligionsSelected() {
-    var bool = religionsPM.slice(1,religionsPM.length).every(r => r.isSelected=== true);
-    console.log(bool);
-    return bool;
+    //var bool = religionsPM.slice(1, religionsPM.length).every(r => r.isSelected=== true);
+    return religionsPM.filter(r => r.id !== allReligionsSelector.attr('id')).every(r => r.isSelected=== true);
 }
