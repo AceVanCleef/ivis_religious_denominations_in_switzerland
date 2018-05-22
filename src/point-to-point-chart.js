@@ -1,5 +1,6 @@
 import {cantonsPM} from "./swiss_map.1.0.js";
 import {religionsPM} from "./religion_selectors.js";
+import {yearsPM} from "./years_selector.js";
 
 let allData;
 let allDataGroupedByYear;
@@ -87,12 +88,12 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
     ];
 
     const allYears = [
-        {name: 2011, isSelected: true},
-        {name: 2012, isSelected: true},
-        {name: 2013, isSelected: true},
-        {name: 2014, isSelected: true},
-        {name: 2015, isSelected: true},
-        {name: 2016, isSelected: true}
+        {year: 2011, isSelected: true},
+        {year: 2012, isSelected: true},
+        {year: 2013, isSelected: true},
+        {year: 2014, isSelected: true},
+        {year: 2015, isSelected: true},
+        {year: 2016, isSelected: true}
     ];
 
 
@@ -104,7 +105,6 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
 
     // create scales for x and y direction
     yScale = updateYScale();
-
     xScale = updateXScale();
 
 
@@ -144,6 +144,22 @@ export function updateReligions() {
     updatePoints();
 }
 
+export function updateYears() {
+    yearsToShow = getYearsToShow(yearsPM);
+    console.log(yearsPM);
+
+    // create scales for x and y direction
+    xScale = updateXScale();
+
+    // create yAxis
+    updateXAxis();
+
+    // add circle
+    updatePoints();
+
+
+}
+
 function getCantonsToShow(cantonsPM) {
     return cantonsPM.filter(canton => canton.isSelected === true).map(canton => isoMapping[canton.iso]);
 }
@@ -153,7 +169,7 @@ function getReligionsToShow(religionsPM) {
 }
 
 function getYearsToShow(yearsPM) {
-    return yearsPM.filter(year => year.isSelected === true).map(year => year.name);
+    return yearsPM.filter(year => year.isSelected === true).map(year => year.year);
 }
 
 function getSelectedDataOnly() {

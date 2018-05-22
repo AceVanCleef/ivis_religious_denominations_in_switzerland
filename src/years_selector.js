@@ -1,3 +1,5 @@
+import {updateYears} from "./point-to-point-chart.js";
+
 /**
  * using: https://refreshless.com/nouislider/
  * using: https://refreshless.com/wnumb/
@@ -43,6 +45,7 @@ function handleUserInput( values, handle, unencoded, tap, positions ) {
     });
 
     //TODO: inform line graph.
+    updateYears();
 
 }
 
@@ -54,7 +57,7 @@ function populateYearsPM(allYears) {
 function createYearPM(_year) {
     return {
         year: _year,
-        isSelected: false
+        isSelected: true
     }
 }
 
