@@ -2,6 +2,8 @@ import {toggleCSSClass} from "./helper_lib.js";
 import {addCSSClass} from "./helper_lib.js";
 import {removeCSSClass} from "./helper_lib.js";
 import {updateCheckboxes} from "./region_selectors.js";
+import {updateCantons} from "./point-to-point-chart.js";
+
 
 
 // create svg canvas
@@ -103,8 +105,8 @@ function click(cantonId) {
     });
     currentCanton.isSelected = !currentCanton.isSelected;
 
-    //TODO: send Update command to line chart.
-    // yourUpdateFunctoinHere();
+    //send Update command to line chart.
+    updateCantons();
 
     toggleCSSClass(currentCanton.iso, "selected-canton");
     updateCheckboxes();

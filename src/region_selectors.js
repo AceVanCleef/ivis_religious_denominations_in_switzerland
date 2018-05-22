@@ -83,7 +83,7 @@ function updateMap(checkbox, cantonISOs) {
     updateMapVisuals(updatedCantons, checkbox.checked);
 
 
-    //TODO: inform line graph.
+    //inform line graph.
     updateCantons();
 }
 
