@@ -14,7 +14,7 @@ export const religionsPM = [
     { name: "andere_christen",  id: "_andere_christen", labeltext: "andere Christen",   parentid: "christian-religions",    isSelected: false },
     //Other religions
     { name: "juden",                id: "_juden",                   labeltext: "Juden",             parentid: "other-religions",   isSelected: false },
-    { name: "islamisten",           id: "_islamisten",              labeltext: "Islamisten",        parentid: "other-religions",   isSelected: false },
+    { name: "muslime",              id: "_muslime",                 labeltext: "Muslime",           parentid: "other-religions",   isSelected: false },
     { name: "andere_religionen",    id: "_andere_religionen",       labeltext: "Andere Religionen", parentid: "other-religions",   isSelected: false },
     // no denomination
     { name: "konfessionslose",  id: "_konfessionslose", labeltext: "konfessionslose",   parentid: "no-religion",    isSelected: false }
