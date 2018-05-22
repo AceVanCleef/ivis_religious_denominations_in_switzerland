@@ -51,11 +51,11 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
     allDataGroupedByYear = dataGroupedByYear;
 
     // create svg canvas
-    const canvHeight = 600, canvWidth = 800;
-    svg = d3.select("body").append("svg")
+    const canvHeight = 450, canvWidth = 600;
+    svg = d3.select("div#line-graph").append("svg")
         .attr("width", canvWidth)
         .attr("height", canvHeight)
-        .style("border", "1px solid");
+        //.style("border", "1px solid");
 
     // calc the width and height depending on margins.
     margin = {top: 50, right: 80, bottom: 50, left: 60};

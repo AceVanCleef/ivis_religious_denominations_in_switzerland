@@ -8,11 +8,11 @@ import {updateCantons} from "./point-to-point-chart.js";
 
 // create svg canvas
 const canvHeight = 375, canvWidth = 600;
-const svg = d3.select("body").append("svg")
+const svg = d3.select("div#swiss-map").append("svg")
     .attr("width", canvWidth)
     .attr("height", canvHeight)
     .attr("id", "swiss-map")
-    .style("border", "1px solid");
+    //.style("border", "1px solid");
 
 // calc the width and height depending on margins.
 const margin = {top: 50, right: 80, bottom: 50, left: 60};
