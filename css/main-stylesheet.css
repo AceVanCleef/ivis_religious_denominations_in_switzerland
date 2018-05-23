@@ -1,5 +1,17 @@
+:root {
+    --background: #ecebe4
+}
+
 
 /* Page Layout */
+
+body {
+    box-sizing: border-box;
+    font-size: 16px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    background-color: var(--background);
+}
 
 .flex-container {
     display: flex;

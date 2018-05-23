@@ -81,7 +81,7 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
     const allReligions = [
         {name: 'andere_christen', isSelected: false},
         {name: 'andere_religionen', isSelected: false},
-        {name: 'islamisten', isSelected: false},
+        {name: 'muslime', isSelected: false},
         {name: 'juden', isSelected: false},
         {name: 'katholiken', isSelected: false},
         {name: 'konfessionslose', isSelected: false},
@@ -103,6 +103,7 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
     religionsToShow = getReligionsToShow(allReligions);
     yearsToShow = getYearsToShow(allYears);
     selectedDataOnly = getSelectedDataOnly();
+
 
     // create scales for x and y direction
     yScale = updateYScale();
@@ -166,7 +167,7 @@ function getCantonsToShow(cantonsPM) {
 }
 
 function getReligionsToShow(religionsPM) {
-    console.log(religionsPM);
+    console.log(religionsToShow);
     return religionsPM.filter(religion => religion.isSelected === true && religion.name !== 'alle_religionen').map(religion => religion.name);
 }
 
@@ -309,7 +310,7 @@ function updatePoints() {
             filteredData.forEach(element => {
                 religionCountAll += element.andere_christen;
                 religionCountAll += element.andere_religionen;
-                religionCountAll += element.islamisten;
+                religionCountAll += element.muslime;
                 religionCountAll += element.juden;
                 religionCountAll += element.katholiken;
                 religionCountAll += element.konfessionslose;
