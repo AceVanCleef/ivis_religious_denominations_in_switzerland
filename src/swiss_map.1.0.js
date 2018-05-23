@@ -23,6 +23,9 @@ export function initSwissMap(){
     drawBy(1, "swiss-mini-map");
     drawBy(2, "swiss-map");
 
+    d3.select('section#map-wrapper')
+        .on('mouseover', mouseOverMap)
+        .on('mouseout', mouseOutOfMap);
 }
 
 ////-------------------------- StateData: cantonsPM ------------------------
@@ -74,27 +77,35 @@ function filterCantonsBy(cantonISOs) {
 
 
 //------------------------ EventHandler Callbacks -------------------------
-//TODO: remove when no longer needed.
-function mouseover(cantonId) {
 
-    console.log("moving over " + cantonId);
-}
-//TODO: remove when no longer needed.
-function mouseout(cantonId) {
+function mouseOverMap() {
+    d3.select('div#swiss-mini-map')
+        .style('display', 'none');
+    d3.select('div#swiss-map')
+        .style('display', 'block');
 
-    console.log("moving out of " + cantonId);
 }
 
-function click(cantonId) {
+function mouseOutOfMap() {
+    d3.select('div#swiss-mini-map')
+        .style('display', 'block');
+    d3.select('div#swiss-map')
+        .style('display', 'none');
+}
+
+
+
+function click(cantonIdWithSuffix) {
     var currentCanton = cantonsPM.find( function(e) {
-        return e.iso === cantonId;
+        return e.iso === getCantonIdFrom(cantonIdWithSuffix);
     });
     currentCanton.isSelected = !currentCanton.isSelected;
 
     //send Update command to line chart.
     updateCantons();
 
-    toggleCSSClass(currentCanton.iso, "selected-canton");
+    toggleCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
+    toggleCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");
     updateCheckboxes();
 }
 
@@ -140,14 +151,14 @@ function drawBy(scaleFactor, targetId) {
                     .data(cantons.features)
                     .enter()
                     .append("path")
-                    .attr("id", d=> d.id)
+                    .attr("id", d=> d.id + "-" + targetId)
             .attr("class", "canton")
                 .attr("d", pathGenerator);
 
             //TODO: remove when no longer needed.
            // cant.on("mouseover", d => mouseover(d.id));
            // cant.on("mouseout", d => mouseout(d.id));
-            cant.on("click", d => click(d.id));
+            cant.on("click", d => click(d.id + "-" + targetId));
 
             g.append("path")
                 .datum(topojson.mesh(topology, topology.objects.cantons))
@@ -180,11 +191,18 @@ export function updateMapVisuals(cantons2update, checked){
 
     cantons2update.forEach( function(currentCanton){
         if (checked){
-            addCSSClass(currentCanton.iso, "selected-canton");
+            addCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
+            addCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");
         } else {
-            removeCSSClass(currentCanton.iso, "selected-canton");
+            removeCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
+            removeCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");
         }
     });
 
 
+}
+
+
+function getCantonIdFrom(cantonIdWithSuffix) {
+    return cantonIdWithSuffix.substring(0, cantonIdWithSuffix.indexOf('-'));
 }
