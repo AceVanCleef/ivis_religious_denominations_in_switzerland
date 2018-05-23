@@ -3,57 +3,78 @@
 <head>
   <title>Religious Denominations in Switzerland</title>
   <meta charset="utf-8"/>
+  <link rel="stylesheet" type="text/css" href="css/main-stylesheet.css">
   <link rel="stylesheet" type="text/css" href="css/swiss-map.css">
   <link rel="stylesheet" type="text/css" href="css/nouislider.min.css">
+  <link rel="stylesheet" type="text/css" href="css/custom-noUiSlider.css">
   <link rel="icon" href="/favicon.png" type="image/png">
-  <style>
-    /* noUiSlider custom css */
-    .noUi-tooltip {
-      display: none;
-    }
-    .noUi-active .noUi-tooltip {
-      display: block;
-    }
-  </style>
 </head>
+
 <body>
 <!-- put your stuff here -->
-<form id="swiss-regions">
-  <!-- Grossregionen gemäss https://de.wikipedia.org/wiki/Liste_der_Regionen_in_der_Schweiz-->
-  <section id="all-regions">
-    <!-- auto-generated checkboxes here -->
-  </section>
-  <section id="bfs-regions">
-    <p>Grossregionen gemäss BFS</p>
-    <!-- auto-generated checkboxes here -->
-  </section>
-  <section id="topographical-regions">
-    <p>Topographische Regionen</p>
-    <!-- auto-generated checkboxes here -->
-  </section>
-</form>
 
-<form id="religions">
-  <section id="all-religions">
+<main>
+  <section id="map-section" class="flex-container">
 
-  </section>
-  <section id="christian-religions">
-    <p>Christentum</p>
-    <!-- auto-generated checkboxes here -->
-  </section>
-  <section id="other-religions">
-    <p>Andere Religionen</p>
-    <!-- auto-generated checkboxes here -->
-  </section>
-  <section id="no-religion">
-    <p>Konfessionslos</p>
-    <!-- auto-generated checkboxes here -->
-  </section>
-</form>
+    <div id="map-wrapper">
+      <div id="swiss-mini-map">
+        <!-- auto-generated swiss map here -->
+      </div>
+      <div id="swiss-map">
+        <!-- auto-generated swiss map here -->
+      </div>
+    </div>
 
-<section id="years-slider">
-  <!-- auto-generated slider here -->
-</section>
+
+    <form id="swiss-regions" class="">
+      <!-- Grossregionen gemäss https://de.wikipedia.org/wiki/Liste_der_Regionen_in_der_Schweiz-->
+      <section id="all-regions">
+        <!-- auto-generated checkboxes here -->
+      </section>
+      <section id="bfs-regions">
+        <p>Grossregionen gemäss BFS</p>
+        <!-- auto-generated checkboxes here -->
+      </section>
+      <section id="topographical-regions">
+        <p>Topographische Regionen</p>
+        <!-- auto-generated checkboxes here -->
+      </section>
+    </form>
+  </section>
+
+  <section class="flex-container">
+    <section id="years-slider">
+      <!-- auto-generated slider here -->
+    </section>
+  </section>
+
+
+  <section class="flex-container">
+    <form id="religions">
+      <section id="all-religions">
+
+      </section>
+      <section id="christian-religions">
+        <p>Christentum</p>
+        <!-- auto-generated checkboxes here -->
+      </section>
+      <section id="other-religions">
+        <p>Andere Religionen</p>
+        <!-- auto-generated checkboxes here -->
+      </section>
+      <section id="no-religion">
+        <p>Konfessionslos</p>
+        <!-- auto-generated checkboxes here -->
+      </section>
+    </form>
+
+    <div id="line-graph">
+      <!-- auto-generated swiss map here -->
+    </div>
+  </section>
+</main>
+
+
 
 <!-- javascript -->
 <!-- external js libraries-->

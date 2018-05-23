@@ -4,39 +4,33 @@ import {removeCSSClass} from "./helper_lib.js";
 import {updateCheckboxes} from "./region_selectors.js";
 import {updateCantons} from "./point-to-point-chart.js";
 
-
-
-// create svg canvas
-const canvHeight = 375, canvWidth = 600;
-const svg = d3.select("body").append("svg")
-    .attr("width", canvWidth)
-    .attr("height", canvHeight)
-    .attr("id", "swiss-map")
-    .style("border", "1px solid");
+const canvHeight = 375 / 2, canvWidth = 600 / 2;
 
 // calc the width and height depending on margins.
 const margin = {top: 50, right: 80, bottom: 50, left: 60};
 const width = canvWidth - margin.left - margin.right;
 const height = canvHeight - margin.top - margin.bottom;
 
-// create parent group and add left and top margin
-const g = svg.append("g")
-    .attr("id", "chart-area")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
 
-// chart title
-svg.append("text")
-    .attr("id", "chart-title")
-    .attr("y", 0)
-    .attr("x", margin.left)
-    .attr("dy", "1.5em")
-    .text("Switzerland");
+
+const cantonLabelThreshold = 1.5;
+var currentScaleFactor = 1;
+
+//todo: 'var allTargetIDs = []' to store <div id="..."> to easily locate canton views when multiple maps are drawn.
+//      e.g. allTargetIDs = ["swiss-mini-map", "swiss-map"]
+//          const delimiter = "-"
+// when to implement? When more than two maps are generated.
 
 ////-------------------------- main() Entry Point ------------------------
 
 
 export function initSwissMap(){
-    doPlot();
+    drawBy(1, "swiss-mini-map");
+    drawBy(2, "swiss-map");
+
+    d3.select('section#map-section')
+        .on('mouseover', mouseOverMap)
+        .on('mouseout', mouseOutOfMap);
 }
 
 ////-------------------------- StateData: cantonsPM ------------------------
@@ -88,39 +82,69 @@ function filterCantonsBy(cantonISOs) {
 
 
 //------------------------ EventHandler Callbacks -------------------------
-//TODO: remove when no longer needed.
-function mouseover(cantonId) {
 
-    console.log("moving over " + cantonId);
+function mouseOverMap() {
+    d3.select('div#swiss-mini-map')
+        .style('display', 'none');
+    d3.select('div#swiss-map')
+        .style('display', 'block');
+    d3.select('div#map-wrapper')
+        .style('width', '75%');
+    d3.selectAll('#swiss-regions section')
+        .style('float', 'none');
+    d3.select('#all-regions')
+        .style('padding-top', '0');
+
 }
-//TODO: remove when no longer needed.
-function mouseout(cantonId) {
 
-    console.log("moving out of " + cantonId);
+function mouseOutOfMap() {
+    d3.select('div#swiss-mini-map')
+        .style('display', 'block');
+    d3.select('div#swiss-map')
+        .style('display', 'none');
+    d3.select('div#map-wrapper')
+        .style('width', 'initial');
+    d3.selectAll('#swiss-regions section')
+        .style('float', 'left');
+    d3.select('#all-regions')
+        .style('padding-top', '100px');
 }
 
-function click(cantonId) {
+
+
+function click(cantonIdWithSuffix) {
     var currentCanton = cantonsPM.find( function(e) {
-        return e.iso === cantonId;
+        return e.iso === getCantonIdFrom(cantonIdWithSuffix);
     });
     currentCanton.isSelected = !currentCanton.isSelected;
 
     //send Update command to line chart.
     updateCantons();
 
-    toggleCSSClass(currentCanton.iso, "selected-canton");
+    toggleCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
+    toggleCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");
     updateCheckboxes();
 }
 
 
 //------------------------ drawing the map -------------------------
 
-function doPlot() {
+function drawBy(scaleFactor, targetId) {
+    // create svg canvas
+    const svg = d3.select("#" + targetId).append("svg")
+        .attr("id", "svg-" + targetId)
+        .attr("height", canvHeight * scaleFactor);
+
+    // create parent group and add left and top margin
+    const g = svg.append("g")
+        .attr("id", "chart-area-" + targetId)
+        .attr("transform", `translate(${margin.left * scaleFactor},${margin.top * scaleFactor})`);
+
     var projection = d3.geoAlbers()  // Albers is best at lat 45°
         .rotate([0, 0])       // rotate around globe by lat and long
         .center([8.3, 46.8])  // lat and long in degrees
-        .scale(10000)         // zoom into small switzerland, depends on the projection
-        .translate([width / 2, height / 2])  // move to center of map
+        .scale(5000 * scaleFactor)         // zoom into small switzerland, depends on the projection
+        .translate([ (width * scaleFactor) / 2, (height * scaleFactor)/ 2])  // move to center of map
         .precision(.1);
 
 
@@ -144,27 +168,31 @@ function doPlot() {
                     .data(cantons.features)
                     .enter()
                     .append("path")
-                    .attr("id", d=> d.id)
+                    .attr("id", d=> d.id + "-" + targetId)
             .attr("class", "canton")
                 .attr("d", pathGenerator);
 
             //TODO: remove when no longer needed.
            // cant.on("mouseover", d => mouseover(d.id));
            // cant.on("mouseout", d => mouseout(d.id));
-            cant.on("click", d => click(d.id));
+            cant.on("click", d => click(d.id + "-" + targetId));
 
             g.append("path")
                 .datum(topojson.mesh(topology, topology.objects.cantons))
                 .attr("class", "canton-boundary")
                 .attr("d", pathGenerator);
 
-            g.selectAll("text.canton-label")
-                .data(cantons.features)
-                .enter().append("text")
-                .attr("class", "canton-label")
-                .attr("transform", function(d) { return "translate(" + pathGenerator.centroid(d) + ")"; })
-                .attr("dy", ".35em")
-                .text(function(d) { return d.properties.name; });
+            if (scaleFactor >= cantonLabelThreshold) {
+                //draw labels.
+                g.selectAll("text.canton-label")
+                    .data(cantons.features)
+                    .enter().append("text")
+                    .attr("class", "canton-label")
+                    .attr("transform", function(d) { return "translate(" + pathGenerator.centroid(d) + ")"; })
+                    .attr("dy", ".35em")
+                    .text(function(d) { return d.properties.name; });
+            }
+
         });
 }
 
@@ -180,11 +208,18 @@ export function updateMapVisuals(cantons2update, checked){
 
     cantons2update.forEach( function(currentCanton){
         if (checked){
-            addCSSClass(currentCanton.iso, "selected-canton");
+            addCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
+            addCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");
         } else {
-            removeCSSClass(currentCanton.iso, "selected-canton");
+            removeCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
+            removeCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");
         }
     });
 
 
+}
+
+//---------------- helper function: makes cantonPM.iso comparable to <path id=iso+"-swiss-(mini-)map"> ----------------
+function getCantonIdFrom(cantonIdWithSuffix) {
+    return cantonIdWithSuffix.substring(0, cantonIdWithSuffix.indexOf('-'));
 }

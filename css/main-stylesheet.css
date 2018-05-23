@@ -1,0 +1,21 @@
+
+/* Page Layout */
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.flex-item {
+
+}
+
+div#line-graph {
+    padding: 0 15px;
+}
+
+form#religions {
+    padding: 40px 15px;
+}
