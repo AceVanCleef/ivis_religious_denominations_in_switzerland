@@ -4,42 +4,25 @@ import {removeCSSClass} from "./helper_lib.js";
 import {updateCheckboxes} from "./region_selectors.js";
 import {updateCantons} from "./point-to-point-chart.js";
 
-
-
-// create svg canvas
 const canvHeight = 375 / 2, canvWidth = 600 / 2;
-const svg = d3.select("div#swiss-map").append("svg")
-    //.attr("width", canvWidth)
-    //.attr("height", canvHeight)
-    .attr("id", "swiss-map")
-    //.style("border", "1px solid");
 
 // calc the width and height depending on margins.
 const margin = {top: 50, right: 80, bottom: 50, left: 60};
 const width = canvWidth - margin.left - margin.right;
 const height = canvHeight - margin.top - margin.bottom;
 
-// create parent group and add left and top margin
-const g = svg.append("g")
-    .attr("id", "chart-area")
-    //.attr("transform", `translate(${margin.left},${margin.top})`);
-
-// chart title
-svg.append("text")
-    .attr("id", "chart-title")
-    .attr("y", 0)
-    .attr("x", margin.left)
-    .attr("dy", "1.5em")
-    //.text("Switzerland");
 
 
 const cantonLabelThreshold = 1.5;
+var currentScaleFactor = 1;
 
 ////-------------------------- main() Entry Point ------------------------
 
 
 export function initSwissMap(){
-    drawBy(2);
+    drawBy(1, "swiss-mini-map");
+    drawBy(2, "swiss-map");
+
 }
 
 ////-------------------------- StateData: cantonsPM ------------------------
@@ -118,11 +101,16 @@ function click(cantonId) {
 
 //------------------------ drawing the map -------------------------
 
-function drawBy(scaleFactor) {
-    svg.attr("width", canvWidth * scaleFactor)
+function drawBy(scaleFactor, targetId) {
+    // create svg canvas
+    const svg = d3.select("#" + targetId).append("svg")
+        .attr("id", "svg-" + targetId)
         .attr("height", canvHeight * scaleFactor);
 
-    g.attr("transform", `translate(${margin.left * scaleFactor},${margin.top * scaleFactor})`);
+    // create parent group and add left and top margin
+    const g = svg.append("g")
+        .attr("id", "chart-area-" + targetId)
+        .attr("transform", `translate(${margin.left * scaleFactor},${margin.top * scaleFactor})`);
 
     var projection = d3.geoAlbers()  // Albers is best at lat 45°
         .rotate([0, 0])       // rotate around globe by lat and long
