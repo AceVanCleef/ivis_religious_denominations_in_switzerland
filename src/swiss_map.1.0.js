@@ -7,10 +7,10 @@ import {updateCantons} from "./point-to-point-chart.js";
 
 
 // create svg canvas
-const canvHeight = 375, canvWidth = 600;
+const canvHeight = 375 / 2, canvWidth = 600 / 2;
 const svg = d3.select("div#swiss-map").append("svg")
-    .attr("width", canvWidth)
-    .attr("height", canvHeight)
+    //.attr("width", canvWidth)
+    //.attr("height", canvHeight)
     .attr("id", "swiss-map")
     //.style("border", "1px solid");
 
@@ -22,7 +22,7 @@ const height = canvHeight - margin.top - margin.bottom;
 // create parent group and add left and top margin
 const g = svg.append("g")
     .attr("id", "chart-area")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+    //.attr("transform", `translate(${margin.left},${margin.top})`);
 
 // chart title
 svg.append("text")
@@ -30,13 +30,16 @@ svg.append("text")
     .attr("y", 0)
     .attr("x", margin.left)
     .attr("dy", "1.5em")
-    .text("Switzerland");
+    //.text("Switzerland");
+
+
+const cantonLabelThreshold = 1.5;
 
 ////-------------------------- main() Entry Point ------------------------
 
 
 export function initSwissMap(){
-    doPlot();
+    drawBy(2);
 }
 
 ////-------------------------- StateData: cantonsPM ------------------------
@@ -115,12 +118,17 @@ function click(cantonId) {
 
 //------------------------ drawing the map -------------------------
 
-function doPlot() {
+function drawBy(scaleFactor) {
+    svg.attr("width", canvWidth * scaleFactor)
+        .attr("height", canvHeight * scaleFactor);
+
+    g.attr("transform", `translate(${margin.left * scaleFactor},${margin.top * scaleFactor})`);
+
     var projection = d3.geoAlbers()  // Albers is best at lat 45°
         .rotate([0, 0])       // rotate around globe by lat and long
         .center([8.3, 46.8])  // lat and long in degrees
-        .scale(10000)         // zoom into small switzerland, depends on the projection
-        .translate([width / 2, height / 2])  // move to center of map
+        .scale(5000 * scaleFactor)         // zoom into small switzerland, depends on the projection
+        .translate([ (width * scaleFactor) / 2, (height * scaleFactor)/ 2])  // move to center of map
         .precision(.1);
 
 
@@ -158,13 +166,17 @@ function doPlot() {
                 .attr("class", "canton-boundary")
                 .attr("d", pathGenerator);
 
-            g.selectAll("text.canton-label")
-                .data(cantons.features)
-                .enter().append("text")
-                .attr("class", "canton-label")
-                .attr("transform", function(d) { return "translate(" + pathGenerator.centroid(d) + ")"; })
-                .attr("dy", ".35em")
-                .text(function(d) { return d.properties.name; });
+            if (scaleFactor >= cantonLabelThreshold) {
+                //draw labels.
+                g.selectAll("text.canton-label")
+                    .data(cantons.features)
+                    .enter().append("text")
+                    .attr("class", "canton-label")
+                    .attr("transform", function(d) { return "translate(" + pathGenerator.centroid(d) + ")"; })
+                    .attr("dy", ".35em")
+                    .text(function(d) { return d.properties.name; });
+            }
+
         });
 }
 
