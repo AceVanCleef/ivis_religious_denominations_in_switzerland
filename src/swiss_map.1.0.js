@@ -16,6 +16,11 @@ const height = canvHeight - margin.top - margin.bottom;
 const cantonLabelThreshold = 1.5;
 var currentScaleFactor = 1;
 
+//todo: 'var allTargetIDs = []' to store <div id="..."> to easily locate canton views when multiple maps are drawn.
+//      e.g. allTargetIDs = ["swiss-mini-map", "swiss-map"]
+//          const delimiter = "-"
+// when to implement? When more than two maps are generated.
+
 ////-------------------------- main() Entry Point ------------------------
 
 
@@ -23,7 +28,7 @@ export function initSwissMap(){
     drawBy(1, "swiss-mini-map");
     drawBy(2, "swiss-map");
 
-    d3.select('section#map-wrapper')
+    d3.select('div#map-wrapper')
         .on('mouseover', mouseOverMap)
         .on('mouseout', mouseOutOfMap);
 }
@@ -202,7 +207,7 @@ export function updateMapVisuals(cantons2update, checked){
 
 }
 
-
+//---------------- helper function: makes cantonPM.iso comparable to <path id=iso+"-swiss-(mini-)map"> ----------------
 function getCantonIdFrom(cantonIdWithSuffix) {
     return cantonIdWithSuffix.substring(0, cantonIdWithSuffix.indexOf('-'));
 }
