@@ -28,7 +28,7 @@ export function initSwissMap(){
     drawBy(1, "swiss-mini-map");
     drawBy(2, "swiss-map");
 
-    d3.select('div#map-wrapper')
+    d3.select('section#map-section')
         .on('mouseover', mouseOverMap)
         .on('mouseout', mouseOutOfMap);
 }
@@ -88,6 +88,12 @@ function mouseOverMap() {
         .style('display', 'none');
     d3.select('div#swiss-map')
         .style('display', 'block');
+    d3.select('div#map-wrapper')
+        .style('width', '75%');
+    d3.selectAll('#swiss-regions section')
+        .style('float', 'none');
+    d3.select('#all-regions')
+        .style('padding-top', '0');
 
 }
 
@@ -96,6 +102,12 @@ function mouseOutOfMap() {
         .style('display', 'block');
     d3.select('div#swiss-map')
         .style('display', 'none');
+    d3.select('div#map-wrapper')
+        .style('width', 'initial');
+    d3.selectAll('#swiss-regions section')
+        .style('float', 'left');
+    d3.select('#all-regions')
+        .style('padding-top', '100px');
 }
 
 
