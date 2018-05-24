@@ -52,7 +52,7 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
     allDataGroupedByYear = dataGroupedByYear;
 
     // create svg canvas
-    const canvHeight = 450, canvWidth = 600;
+    const canvHeight = 450, canvWidth = 660;
     svg = d3.select("div#line-graph").append("svg")
         .attr("width", canvWidth)
         .attr("height", canvHeight)
@@ -60,7 +60,7 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
 
     // calc the width and height depending on margins.
     margin = {top: 50, right: 80, bottom: 50, left: 60};
-    width = canvWidth - margin.left - margin.right;
+    width = canvWidth - margin.left - margin.right - 60;
     height = canvHeight - margin.top - margin.bottom;
 
     // create parent group and add left and top margin
@@ -245,7 +245,7 @@ function updatePoints() {
 
         // add circle
         religionsToShow.forEach(religion => {
-            let religionGroup = points.append("g").attr("class", `points__${religion}`);
+            let religionGroup = points.append("g").attr("class", `religion religion__${religion}`);
 
             let counter = 0;
             let coordinatesFromPreviousCircle = {cx: 0, cy: 0};
@@ -269,17 +269,18 @@ function updatePoints() {
                     }
                 );
 
-                let yearGroup = religionGroup.append("g").attr("class", `points__${year}`);
+                // let yearGroup = religionGroup.append("g").attr("class", `points__${year}`);
 
-                yearGroup.append("circle")
-                    .attr("class", `point__${religion}-${year}`)
+                religionGroup.append("circle")
+                    .attr("class", `point point__${religion}-${year}`)
                     .attr("cx", xScale(year))
                     .attr("cy", yScale(religionCount*100/religionCountAll))
                     .attr("r", 4);
 
+                // Connect points with lines
                 if (counter > 0) {
                     religionGroup.append("line")
-                        .attr("class", `line__${religion}-${year}`)
+                        .attr("class", `line line__${religion}-${year}`)
                         .attr("x1", coordinatesFromPreviousCircle.cx)
                         .attr("y1", coordinatesFromPreviousCircle.cy)
                         .attr("x2", xScale(year))
@@ -291,6 +292,50 @@ function updatePoints() {
                 coordinatesFromPreviousCircle.cy = yScale(religionCount*100/religionCountAll);
 
                 ++counter;
+
+                //Create label for every point
+
+
+                // Create label for every religion line
+                if (year === d3.max(yearsToShow)) {
+                    const coordinatesFromLastCircle = {cx: xScale(year), cy: yScale(religionCount*100/religionCountAll)};
+
+                    const labelGroup = religionGroup.append("g")
+                        .attr("class", `label label__${religion}`);
+
+                    labelGroup.append("polygon")
+                        .attr("class", `polygon polygon__${religion}`)
+                        .attr("points",
+                            `${coordinatesFromLastCircle.cx+2},${coordinatesFromLastCircle.cy} 
+                            ${coordinatesFromLastCircle.cx+16},${coordinatesFromLastCircle.cy+6} 
+                            ${coordinatesFromLastCircle.cx+16},${coordinatesFromLastCircle.cy-6}`
+                        );
+
+                    const labelRectangle = labelGroup.append("rect")
+                        .attr("class", `rectangle rectangle__${religion}`)
+                        .attr("id", `rectangle__${religion}`)
+                        .attr("x", coordinatesFromLastCircle.cx+16)
+                        .attr("y", coordinatesFromLastCircle.cy-6)
+                        .attr("height", 12)
+                        .attr("fill", "black");
+
+                    const labelText = labelGroup.append("text")
+                        .attr("class", `text text__${religion}`)
+                        .attr("id", `text__${religion}`)
+                        .attr("fill", "white")
+                        .text(religion);
+
+                    const labelTextElement = document.getElementById(`text__${religion}`);
+                    const labelTextSVG = labelTextElement.getBBox();
+
+                    labelRectangle.attr("width", labelTextSVG.width+8);
+
+                    const labelRectangleElement = document.getElementById(`rectangle__${religion}`);
+                    const labelRectangleSVG = labelRectangleElement.getBBox();
+
+                    labelText.attr("x", labelRectangleSVG.x+(labelRectangleSVG.width/2))
+                        .attr("y", coordinatesFromLastCircle.cy+4);
+                }
             });
         });
     }
