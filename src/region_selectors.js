@@ -40,6 +40,7 @@ export function setupRegionSelectors() {
     checkboxSelection = d3.selectAll('#swiss-regions input');
     checkboxSelection.on("click", handleUserInput);
 
+    //todo: find bug.
     //setInitialValues()
 }
 
