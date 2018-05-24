@@ -9,7 +9,6 @@ let cantonsToShow;
 let religionsToShow;
 let yearsToShow;
 let selectedDataOnly;
-// let peopleInSelectedCantonsAndYears;
 
 let svg;
 let g;
@@ -126,7 +125,6 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
 export function updateCantons() {
     cantonsToShow = getCantonsToShow(cantonsPM);
     selectedDataOnly = getSelectedDataOnly();
-    // getPeopleInSelectedCantonsAndYears();
 
     // create scales for x and y direction
     yScale = updateYScale();
@@ -148,7 +146,6 @@ export function updateReligions() {
 export function updateYears() {
     yearsToShow = getYearsToShow(yearsPM);
     selectedDataOnly = getSelectedDataOnly();
-    // getPeopleInSelectedCantonsAndYears();
 
     // create scales for x and y direction
     xScale = updateXScale();
@@ -167,7 +164,6 @@ function getCantonsToShow(cantonsPM) {
 }
 
 function getReligionsToShow(religionsPM) {
-    console.log(religionsToShow);
     return religionsPM.filter(religion => religion.isSelected === true && religion.name !== 'alle_religionen').map(religion => religion.name);
 }
 
@@ -179,57 +175,11 @@ function getSelectedDataOnly() {
     return allData.filter(element => cantonsToShow.includes(element.kanton) && yearsToShow.includes(element.jahr));
 }
 
-// function getPeopleInSelectedCantonsAndYears() {
-//     peopleInSelectedCantonsAndYears = 0;
-//
-//     selectedDataOnly.forEach(element => {
-//             peopleInSelectedCantonsAndYears += element.andere_christen;
-//             peopleInSelectedCantonsAndYears += element.andere_religionen;
-//             peopleInSelectedCantonsAndYears += element.islamisten;
-//             peopleInSelectedCantonsAndYears += element.juden;
-//             peopleInSelectedCantonsAndYears += element.katholiken;
-//             peopleInSelectedCantonsAndYears += element.konfessionslose;
-//             peopleInSelectedCantonsAndYears += element.reformierte;
-//     })
-// }
-
 function updateYScale() {
-    // let allSupporters = [];
-    // // create domain for supporter axis
-    // yearsToShow.forEach(year => {
-    //     let allOtherChristians = 0;
-    //     let allOtherReligions = 0;
-    //     let allIslamists = 0;
-    //     let allJews = 0;
-    //     let allCatholics = 0;
-    //     let allConfessionless = 0;
-    //     let allReformed = 0;
-    //     selectedDataOnly
-    //         .filter(element => element.jahr === year)
-    //         .forEach(element => {
-    //         allOtherChristians += element.andere_christen;
-    //         allOtherReligions += element.andere_religionen;
-    //         allIslamists += element.islamisten;
-    //         allJews += element.juden;
-    //         allCatholics += element.katholiken;
-    //         allConfessionless += element.konfessionslose;
-    //         allReformed += element.reformierte;
-    //     });
-    //     allSupporters.push(allOtherChristians);
-    //     allSupporters.push(allOtherReligions);
-    //     allSupporters.push(allIslamists);
-    //     allSupporters.push(allJews);
-    //     allSupporters.push(allCatholics);
-    //     allSupporters.push(allConfessionless);
-    //     allSupporters.push(allReformed);
-    // });
-    // const supporterMax = d3.max(allSupporters);
-    const supporterDomain = [0, 100];
-
     // create scale for y direction
     return d3.scaleLinear()
         .range([height, 0])
-        .domain(supporterDomain);
+        .domain([0, 100]);
 }
 
 function updateXScale() {
@@ -253,7 +203,7 @@ function createYLabel() {
         .attr("dy", "1em")
         .attr("font-family", "sans-serif")
         .style("text-anchor", "middle")
-        .text("Anzahl Personen");
+        .text("Prozent");
 }
 
 function createXLabel() {
@@ -291,55 +241,58 @@ function updateYAxis() {
 function updatePoints() {
     points.selectAll("*").remove();
 
+    if (selectedDataOnly.length !== 0) {
 
-    // add circle
-    religionsToShow.forEach(religion => {
-        let religionGroup = points.append("g").attr("class", `points__${religion}`);
+        // add circle
+        religionsToShow.forEach(religion => {
+            let religionGroup = points.append("g").attr("class", `points__${religion}`);
 
-        let counter = 0;
-        let coordinatesFromPreviousCircle = {cx: 0, cy: 0};
+            let counter = 0;
+            let coordinatesFromPreviousCircle = {cx: 0, cy: 0};
 
-        yearsToShow.forEach(year => {
-            const filteredData = selectedDataOnly.filter(element => element.jahr === year);
-            let religionCount = 0;
-            filteredData.forEach(element =>
-                religionCount += element[religion]
-            );
+            yearsToShow.forEach(year => {
+                const filteredData = selectedDataOnly.filter(element => element.jahr === year);
+                let religionCount = 0;
+                filteredData.forEach(element =>
+                    religionCount += element[religion]
+                );
 
-            let religionCountAll = 0;
-            filteredData.forEach(element => {
-                religionCountAll += element.andere_christen;
-                religionCountAll += element.andere_religionen;
-                religionCountAll += element.muslime;
-                religionCountAll += element.juden;
-                religionCountAll += element.katholiken;
-                religionCountAll += element.konfessionslose;
-                religionCountAll += element.reformierte;
-            }
-            );
+                let religionCountAll = 0;
+                filteredData.forEach(element => {
+                        religionCountAll += element.andere_christen;
+                        religionCountAll += element.andere_religionen;
+                        religionCountAll += element.muslime;
+                        religionCountAll += element.juden;
+                        religionCountAll += element.katholiken;
+                        religionCountAll += element.konfessionslose;
+                        religionCountAll += element.reformierte;
+                    }
+                );
 
-            let yearGroup = religionGroup.append("g").attr("class", `points__${year}`);
+                let yearGroup = religionGroup.append("g").attr("class", `points__${year}`);
 
-            yearGroup.append("circle")
-                .attr("class", `point__${religion}-${year}`)
-                .attr("cx", xScale(year))
-                .attr("cy", yScale(religionCount*100/religionCountAll))
-                .attr("r", 4);
+                yearGroup.append("circle")
+                    .attr("class", `point__${religion}-${year}`)
+                    .attr("cx", xScale(year))
+                    .attr("cy", yScale(religionCount*100/religionCountAll))
+                    .attr("r", 4);
 
-            if (counter > 0) {
-                religionGroup.append("line")
-                    .attr("class", `line__${religion}-${year}`)
-                    .attr("x1", coordinatesFromPreviousCircle.cx)
-                    .attr("y1", coordinatesFromPreviousCircle.cy)
-                    .attr("x2", xScale(year))
-                    .attr("y2",yScale(religionCount*100/religionCountAll))
-                    .attr("stroke", "red");
-            }
+                if (counter > 0) {
+                    religionGroup.append("line")
+                        .attr("class", `line__${religion}-${year}`)
+                        .attr("x1", coordinatesFromPreviousCircle.cx)
+                        .attr("y1", coordinatesFromPreviousCircle.cy)
+                        .attr("x2", xScale(year))
+                        .attr("y2",yScale(religionCount*100/religionCountAll))
+                        .attr("stroke", "red");
+                }
 
-            coordinatesFromPreviousCircle.cx = xScale(year);
-            coordinatesFromPreviousCircle.cy = yScale(religionCount*100/religionCountAll);
+                coordinatesFromPreviousCircle.cx = xScale(year);
+                coordinatesFromPreviousCircle.cy = yScale(religionCount*100/religionCountAll);
 
-            ++counter;
+                ++counter;
+            });
         });
-    });
+    }
+
 }
