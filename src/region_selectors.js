@@ -1,6 +1,7 @@
 import {cantonsPM} from "./swiss_map.1.0.js";
 import {updateMapVisuals} from "./swiss_map.1.0.js";
 import {updateCantonsPM} from "./swiss_map.1.0.js";
+import {initMapWithAllCantonsSelected} from "./swiss_map.1.0.js";
 import {createHtmlInputElementOfType} from "./helper_lib.js";
 import {updateCantons} from "./point-to-point-chart.js";
 
@@ -38,29 +39,14 @@ export function setupRegionSelectors() {
         createHtmlInputElementOfType("checkbox", region.name, region.code, region.code, region.name, region.parentId, true);
     });
     checkboxSelection = d3.selectAll('#swiss-regions input');
-    checkboxSelection.on("click", handleUserInput);
+    checkboxSelection
+        .property('checked', initMapWithAllCantonsSelected)
+        .on("click", handleUserInput);
 
-    //todo: find bug.
-    //setInitialValues()
-}
+    //update map visuals
 
-
-function setInitialValues() {
-    //update views.
-    var checkbox = document.getElementById("_CH");
-    checkbox.checked = true;
-    console.log("setInitialValues in region_selectors:");
-    console.log( checkbox);
-
-    // same as handleUserInput():
-    var checkboxCode = checkbox.getAttribute('value');
-    console.log("checkboxcode: "+ checkboxCode);
-    var cantonISOs = regions.find(r => r.code === checkboxCode).cantons;
-    console.log(cantonISOs);
-    updateMap(checkbox, cantonISOs);
-    updateCheckboxes();
-
-    console.log(cantonsPM);
+    //inform graph.
+    updateCantons();
 }
 
 //------------------------ EventHandler Callbacks -------------------------
@@ -68,6 +54,8 @@ function setInitialValues() {
 
 function handleUserInput() {
     var checkbox = this;
+    console.log(this);
+    console.log(cantonsPM);
     var checkboxCode = checkbox.getAttribute('value');
     var cantonISOs = regions.find(r => r.code === checkboxCode).cantons;
 
