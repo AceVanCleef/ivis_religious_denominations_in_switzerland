@@ -47,7 +47,10 @@ function createCantonPM(cantonId) {
 function populateCantonsPM(cantonIDs) {
     const sortedCantonIDs = cantonIDs.sort();
     sortedCantonIDs.forEach( function(id) {
-        cantonsPM.push( createCantonPM(id) );
+        //prevent duplicates.
+        if (!cantonsPM.find(e => e.iso === id)){
+            cantonsPM.push( createCantonPM(id) );
+        }
     });
 }
 
@@ -60,11 +63,17 @@ function populateCantonsPM(cantonIDs) {
  */
 export function updateCantonsPM(cantonISOs, checked) {
     var cantons2update = filterCantonsBy(cantonISOs);
+
+    console.log("------updateCantonsPM:");
+    console.log(cantons2update);
+
     if (checked) {
         cantons2update.forEach(e => e.isSelected = true);
     } else {
         cantons2update.forEach(e => e.isSelected = false);
     }
+    console.log("after:");
+    console.log(cantons2update);
     return cantons2update
 }
 
@@ -172,9 +181,7 @@ function drawBy(scaleFactor, targetId) {
             .attr("class", "canton")
                 .attr("d", pathGenerator);
 
-            //TODO: remove when no longer needed.
-           // cant.on("mouseover", d => mouseover(d.id));
-           // cant.on("mouseout", d => mouseout(d.id));
+
             cant.on("click", d => click(d.id + "-" + targetId));
 
             g.append("path")

@@ -39,6 +39,27 @@ export function setupRegionSelectors() {
     });
     checkboxSelection = d3.selectAll('#swiss-regions input');
     checkboxSelection.on("click", handleUserInput);
+
+    //setInitialValues()
+}
+
+
+function setInitialValues() {
+    //update views.
+    var checkbox = document.getElementById("_CH");
+    checkbox.checked = true;
+    console.log("setInitialValues in region_selectors:");
+    console.log( checkbox);
+
+    // same as handleUserInput():
+    var checkboxCode = checkbox.getAttribute('value');
+    console.log("checkboxcode: "+ checkboxCode);
+    var cantonISOs = regions.find(r => r.code === checkboxCode).cantons;
+    console.log(cantonISOs);
+    updateMap(checkbox, cantonISOs);
+    updateCheckboxes();
+
+    console.log(cantonsPM);
 }
 
 //------------------------ EventHandler Callbacks -------------------------
@@ -82,7 +103,10 @@ function updateMap(checkbox, cantonISOs) {
     var updatedCantons = updateCantonsPM(cantonISOs, checkbox.checked);
     updateMapVisuals(updatedCantons, checkbox.checked);
 
-
+    console.log("updatedCantons:");
+    console.log(checkbox);
+    console.log(cantonISOs);
+    console.log(updatedCantons);
     //inform line graph.
     updateCantons();
 }

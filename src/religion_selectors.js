@@ -35,6 +35,21 @@ export function setupReligionSelectors() {
     allReligionsSelector.on("click", handleAllReligionsSelector);
     individualReligions = d3.selectAll('form#religions input').filter(function(){ return this.id !== '_alle_religionen';});
     individualReligions.on('click', handleIndividualReligions);
+
+    setInitialValues();
+}
+
+function setInitialValues() {
+    //update views.
+    document.getElementById("_reformierte").checked = true;
+    document.getElementById("_katholiken").checked = true;
+
+    //update presentation models.
+    religionsPM.find(e => e.id === '_reformierte').isSelected = true;
+    religionsPM.find(e => e.id === '_katholiken').isSelected = true;
+
+    //inform graph.
+    updateReligions();
 }
 
 function handleIndividualReligions() {
