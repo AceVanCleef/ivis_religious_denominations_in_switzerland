@@ -9,7 +9,6 @@ let cantonsToShow;
 let religionsToShow;
 let yearsToShow;
 let selectedDataOnly;
-// let peopleInSelectedCantonsAndYears;
 
 let svg;
 let g;
@@ -53,7 +52,7 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
     allDataGroupedByYear = dataGroupedByYear;
 
     // create svg canvas
-    const canvHeight = 450, canvWidth = 600;
+    const canvHeight = 450, canvWidth = 660;
     svg = d3.select("div#line-graph").append("svg")
         .attr("width", canvWidth)
         .attr("height", canvHeight)
@@ -61,7 +60,7 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
 
     // calc the width and height depending on margins.
     margin = {top: 50, right: 80, bottom: 50, left: 60};
-    width = canvWidth - margin.left - margin.right;
+    width = canvWidth - margin.left - margin.right - 60;
     height = canvHeight - margin.top - margin.bottom;
 
     // create parent group and add left and top margin
@@ -81,7 +80,7 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
     const allReligions = [
         {name: 'andere_christen', isSelected: false},
         {name: 'andere_religionen', isSelected: false},
-        {name: 'islamisten', isSelected: false},
+        {name: 'muslime', isSelected: false},
         {name: 'juden', isSelected: false},
         {name: 'katholiken', isSelected: false},
         {name: 'konfessionslose', isSelected: false},
@@ -104,6 +103,7 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
     yearsToShow = getYearsToShow(allYears);
     selectedDataOnly = getSelectedDataOnly();
 
+
     // create scales for x and y direction
     yScale = updateYScale();
     xScale = updateXScale();
@@ -125,7 +125,6 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
 export function updateCantons() {
     cantonsToShow = getCantonsToShow(cantonsPM);
     selectedDataOnly = getSelectedDataOnly();
-    // getPeopleInSelectedCantonsAndYears();
 
     // create scales for x and y direction
     yScale = updateYScale();
@@ -147,7 +146,6 @@ export function updateReligions() {
 export function updateYears() {
     yearsToShow = getYearsToShow(yearsPM);
     selectedDataOnly = getSelectedDataOnly();
-    // getPeopleInSelectedCantonsAndYears();
 
     // create scales for x and y direction
     xScale = updateXScale();
@@ -166,7 +164,6 @@ function getCantonsToShow(cantonsPM) {
 }
 
 function getReligionsToShow(religionsPM) {
-    console.log(religionsPM);
     return religionsPM.filter(religion => religion.isSelected === true && religion.name !== 'alle_religionen').map(religion => religion.name);
 }
 
@@ -178,57 +175,11 @@ function getSelectedDataOnly() {
     return allData.filter(element => cantonsToShow.includes(element.kanton) && yearsToShow.includes(element.jahr));
 }
 
-// function getPeopleInSelectedCantonsAndYears() {
-//     peopleInSelectedCantonsAndYears = 0;
-//
-//     selectedDataOnly.forEach(element => {
-//             peopleInSelectedCantonsAndYears += element.andere_christen;
-//             peopleInSelectedCantonsAndYears += element.andere_religionen;
-//             peopleInSelectedCantonsAndYears += element.islamisten;
-//             peopleInSelectedCantonsAndYears += element.juden;
-//             peopleInSelectedCantonsAndYears += element.katholiken;
-//             peopleInSelectedCantonsAndYears += element.konfessionslose;
-//             peopleInSelectedCantonsAndYears += element.reformierte;
-//     })
-// }
-
 function updateYScale() {
-    // let allSupporters = [];
-    // // create domain for supporter axis
-    // yearsToShow.forEach(year => {
-    //     let allOtherChristians = 0;
-    //     let allOtherReligions = 0;
-    //     let allIslamists = 0;
-    //     let allJews = 0;
-    //     let allCatholics = 0;
-    //     let allConfessionless = 0;
-    //     let allReformed = 0;
-    //     selectedDataOnly
-    //         .filter(element => element.jahr === year)
-    //         .forEach(element => {
-    //         allOtherChristians += element.andere_christen;
-    //         allOtherReligions += element.andere_religionen;
-    //         allIslamists += element.islamisten;
-    //         allJews += element.juden;
-    //         allCatholics += element.katholiken;
-    //         allConfessionless += element.konfessionslose;
-    //         allReformed += element.reformierte;
-    //     });
-    //     allSupporters.push(allOtherChristians);
-    //     allSupporters.push(allOtherReligions);
-    //     allSupporters.push(allIslamists);
-    //     allSupporters.push(allJews);
-    //     allSupporters.push(allCatholics);
-    //     allSupporters.push(allConfessionless);
-    //     allSupporters.push(allReformed);
-    // });
-    // const supporterMax = d3.max(allSupporters);
-    const supporterDomain = [0, 100];
-
     // create scale for y direction
     return d3.scaleLinear()
         .range([height, 0])
-        .domain(supporterDomain);
+        .domain([0, 100]);
 }
 
 function updateXScale() {
@@ -252,7 +203,7 @@ function createYLabel() {
         .attr("dy", "1em")
         .attr("font-family", "sans-serif")
         .style("text-anchor", "middle")
-        .text("Anzahl Personen");
+        .text("Prozent");
 }
 
 function createXLabel() {
@@ -290,55 +241,152 @@ function updateYAxis() {
 function updatePoints() {
     points.selectAll("*").remove();
 
+    if (selectedDataOnly.length !== 0) {
 
-    // add circle
-    religionsToShow.forEach(religion => {
-        let religionGroup = points.append("g").attr("class", `points__${religion}`);
+        // add circle
+        religionsToShow.forEach(religion => {
+            const religionGroup = points.append("g").attr("class", `religion religion__${religion}`);
+            const lineGroup = religionGroup.append("g").attr("class", `line-group line-group__${religion}`);
 
-        let counter = 0;
-        let coordinatesFromPreviousCircle = {cx: 0, cy: 0};
 
-        yearsToShow.forEach(year => {
-            const filteredData = selectedDataOnly.filter(element => element.jahr === year);
-            let religionCount = 0;
-            filteredData.forEach(element =>
-                religionCount += element[religion]
-            );
+            let counter = 0;
+            let coordinatesFromPreviousCircle = {cx: 0, cy: 0};
 
-            let religionCountAll = 0;
-            filteredData.forEach(element => {
-                religionCountAll += element.andere_christen;
-                religionCountAll += element.andere_religionen;
-                religionCountAll += element.islamisten;
-                religionCountAll += element.juden;
-                religionCountAll += element.katholiken;
-                religionCountAll += element.konfessionslose;
-                religionCountAll += element.reformierte;
-            }
-            );
+            yearsToShow.forEach(year => {
+                const filteredData = selectedDataOnly.filter(element => element.jahr === year);
+                let religionCount = 0;
+                filteredData.forEach(element =>
+                    religionCount += element[religion]
+                );
 
-            let yearGroup = religionGroup.append("g").attr("class", `points__${year}`);
+                let religionCountAll = 0;
+                filteredData.forEach(element => {
+                        religionCountAll += element.andere_christen;
+                        religionCountAll += element.andere_religionen;
+                        religionCountAll += element.muslime;
+                        religionCountAll += element.juden;
+                        religionCountAll += element.katholiken;
+                        religionCountAll += element.konfessionslose;
+                        religionCountAll += element.reformierte;
+                    }
+                );
 
-            yearGroup.append("circle")
-                .attr("class", `point__${religion}-${year}`)
-                .attr("cx", xScale(year))
-                .attr("cy", yScale(religionCount*100/religionCountAll))
-                .attr("r", 4);
+                const religionPercentage = religionCount*100/religionCountAll;
 
-            if (counter > 0) {
-                religionGroup.append("line")
-                    .attr("class", `line__${religion}-${year}`)
-                    .attr("x1", coordinatesFromPreviousCircle.cx)
-                    .attr("y1", coordinatesFromPreviousCircle.cy)
-                    .attr("x2", xScale(year))
-                    .attr("y2",yScale(religionCount*100/religionCountAll))
-                    .attr("stroke", "red");
-            }
+                let coordinatesFromCurrentCircle = {cx: xScale(year), cy: yScale(religionPercentage)};
 
-            coordinatesFromPreviousCircle.cx = xScale(year);
-            coordinatesFromPreviousCircle.cy = yScale(religionCount*100/religionCountAll);
+                const pointGroup = religionGroup.append("g").attr("class", `point-group point-group__${religion}-${year}`);
 
-            ++counter;
+                pointGroup.append("circle")
+                    .attr("class", `point point__${religion}-${year}`)
+                    .attr("cx", coordinatesFromCurrentCircle.cx)
+                    .attr("cy", coordinatesFromCurrentCircle.cy)
+                    .attr("r", 4);
+
+                // Connect points with lines
+                if (counter > 0) {
+                    lineGroup.append("line")
+                        .attr("class", `line line__${religion}`)
+                        .attr("x1", coordinatesFromPreviousCircle.cx)
+                        .attr("y1", coordinatesFromPreviousCircle.cy)
+                        .attr("x2", coordinatesFromCurrentCircle.cx)
+                        .attr("y2", coordinatesFromCurrentCircle.cy);
+                }
+
+                coordinatesFromPreviousCircle.cx = coordinatesFromCurrentCircle.cx;
+                coordinatesFromPreviousCircle.cy = coordinatesFromCurrentCircle.cy;
+
+                ++counter;
+
+                // Create label for every point
+                const pointLabelGroup = pointGroup.append("g")
+                    .attr("class", `point-label point-label__${religion}`);
+
+                pointLabelGroup.append("polygon")
+                    .attr("class", `polygon polygon__${religion}-${year}`)
+                    .attr("points",
+                        `${coordinatesFromCurrentCircle.cx},${coordinatesFromCurrentCircle.cy-2} 
+                            ${coordinatesFromCurrentCircle.cx+6},${coordinatesFromCurrentCircle.cy-16} 
+                            ${coordinatesFromCurrentCircle.cx-6},${coordinatesFromCurrentCircle.cy-16}`
+                    );
+
+                const pointLabelRectangle = pointLabelGroup.append("rect")
+                    .attr("class", `rectangle rectangle__${religion}-${year}`)
+                    .attr("id", `rectangle__${religion}-${year}`)
+                    .attr("rx", "5")
+                    .attr("ry", "5");
+
+                const pointLabelTextPercentage = pointLabelGroup.append("text")
+                    .attr("class", `text text__percentage-${religion}-${year}`)
+                    .attr("id", `text__percentage-${religion}-${year}`)
+                    .text(`${religionPercentage.toFixed(1)}%`);
+
+                const pointLabelTextAmount = pointLabelGroup.append("text")
+                    .attr("class", `text text__amount${religion}-${year}`)
+                    .attr("id", `text__amount-${religion}-${year}`)
+                    .text(`${religionCount} Personen`);
+
+                const pointLabelTextPercentageElement = document.getElementById(`text__percentage-${religion}-${year}`);
+                const pointLabelTextPercentageSVG = pointLabelTextPercentageElement.getBBox();
+
+                const pointLabelTextAmountElement = document.getElementById(`text__amount-${religion}-${year}`);
+                const pointLabelTextAmountSVG = pointLabelTextAmountElement.getBBox();
+
+                pointLabelRectangle.attr("x", coordinatesFromCurrentCircle.cx-(pointLabelTextAmountSVG.width/2)-4)
+                    .attr("y", coordinatesFromCurrentCircle.cy-16-pointLabelTextPercentageSVG.height-pointLabelTextAmountSVG.height-8-4)
+                    .attr("width", pointLabelTextAmountSVG.width+8)
+                    .attr("height", pointLabelTextPercentageSVG.height+pointLabelTextAmountSVG.height+8+4);
+
+                const pointLabelRectangleElement = document.getElementById(`rectangle__${religion}-${year}`);
+                const pointLabelRectangleSVG = pointLabelRectangleElement.getBBox();
+
+                pointLabelTextPercentage.attr("x", pointLabelRectangleSVG.x+(pointLabelRectangleSVG.width/2))
+                    .attr("y", coordinatesFromCurrentCircle.cy-16-pointLabelRectangleSVG.height+14);
+
+                pointLabelTextAmount.attr("x", pointLabelRectangleSVG.x+(pointLabelRectangleSVG.width/2))
+                    .attr("y", coordinatesFromCurrentCircle.cy-16-8);
+
+
+                // Create label for every religion line
+                if (year === d3.max(yearsToShow)) {
+                    const coordinatesFromLastCircle = {cx: xScale(year), cy: yScale(religionCount*100/religionCountAll)};
+
+                    const lineLabelGroup = lineGroup.append("g")
+                        .attr("class", `line-label line-label__${religion}`);
+
+                    lineLabelGroup.append("polygon")
+                        .attr("class", `polygon polygon__${religion}`)
+                        .attr("points",
+                            `${coordinatesFromLastCircle.cx+2},${coordinatesFromLastCircle.cy} 
+                            ${coordinatesFromLastCircle.cx+16},${coordinatesFromLastCircle.cy+6} 
+                            ${coordinatesFromLastCircle.cx+16},${coordinatesFromLastCircle.cy-6}`
+                        );
+
+                    const labelRectangle = lineLabelGroup.append("rect")
+                        .attr("class", `rectangle rectangle__${religion}`)
+                        .attr("id", `rectangle__${religion}`)
+                        .attr("x", coordinatesFromLastCircle.cx+16)
+                        .attr("y", coordinatesFromLastCircle.cy-6)
+                        .attr("height", 12);
+
+                    const labelText = lineLabelGroup.append("text")
+                        .attr("class", `text text__${religion}`)
+                        .attr("id", `text__${religion}`)
+                        .text(religion);
+
+                    const labelTextElement = document.getElementById(`text__${religion}`);
+                    const labelTextSVG = labelTextElement.getBBox();
+
+                    labelRectangle.attr("width", labelTextSVG.width+8);
+
+                    const labelRectangleElement = document.getElementById(`rectangle__${religion}`);
+                    const labelRectangleSVG = labelRectangleElement.getBBox();
+
+                    labelText.attr("x", labelRectangleSVG.x+(labelRectangleSVG.width/2))
+                        .attr("y", coordinatesFromLastCircle.cy+4);
+                }
+            });
         });
-    });
+    }
+
 }

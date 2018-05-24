@@ -9,7 +9,7 @@ d3.csv("./data/religions.csv", (d) => {
         katholiken : +d.katholiken,
         andere_christen : +d.andere_christen,
         juden : +d.juden,
-        islamisten : +d.islamisten,
+        muslime : +d.islamisten,
         andere_religionen : +d.andere_religionen,
         konfessionslose : +d.konfessionslose,
         iso: d.iso
