@@ -245,7 +245,9 @@ function updatePoints() {
 
         // add circle
         religionsToShow.forEach(religion => {
-            let religionGroup = points.append("g").attr("class", `religion religion__${religion}`);
+            const religionGroup = points.append("g").attr("class", `religion religion__${religion}`);
+            const lineGroup = religionGroup.append("g").attr("class", `line-group line-group__${religion}`);
+
 
             let counter = 0;
             let coordinatesFromPreviousCircle = {cx: 0, cy: 0};
@@ -273,7 +275,9 @@ function updatePoints() {
 
                 let coordinatesFromCurrentCircle = {cx: xScale(year), cy: yScale(religionPercentage)};
 
-                religionGroup.append("circle")
+                const pointGroup = religionGroup.append("g").attr("class", `point-group point-group__${religion}-${year}`);
+
+                pointGroup.append("circle")
                     .attr("class", `point point__${religion}-${year}`)
                     .attr("cx", coordinatesFromCurrentCircle.cx)
                     .attr("cy", coordinatesFromCurrentCircle.cy)
@@ -281,13 +285,12 @@ function updatePoints() {
 
                 // Connect points with lines
                 if (counter > 0) {
-                    religionGroup.append("line")
-                        .attr("class", `line line__${religion}-${year}`)
+                    lineGroup.append("line")
+                        .attr("class", `line line__${religion}`)
                         .attr("x1", coordinatesFromPreviousCircle.cx)
                         .attr("y1", coordinatesFromPreviousCircle.cy)
                         .attr("x2", coordinatesFromCurrentCircle.cx)
-                        .attr("y2", coordinatesFromCurrentCircle.cy)
-                        .attr("stroke", "red");
+                        .attr("y2", coordinatesFromCurrentCircle.cy);
                 }
 
                 coordinatesFromPreviousCircle.cx = coordinatesFromCurrentCircle.cx;
@@ -296,10 +299,10 @@ function updatePoints() {
                 ++counter;
 
                 // Create label for every point
-                const labelGroup = religionGroup.append("g")
-                    .attr("class", `label label__${religion}`);
+                const pointLabelGroup = pointGroup.append("g")
+                    .attr("class", `point-label point-label__${religion}`);
 
-                labelGroup.append("polygon")
+                pointLabelGroup.append("polygon")
                     .attr("class", `polygon polygon__${religion}-${year}`)
                     .attr("points",
                         `${coordinatesFromCurrentCircle.cx},${coordinatesFromCurrentCircle.cy-2} 
@@ -307,21 +310,20 @@ function updatePoints() {
                             ${coordinatesFromCurrentCircle.cx-6},${coordinatesFromCurrentCircle.cy-16}`
                     );
 
-                const pointLabelRectangle = labelGroup.append("rect")
+                const pointLabelRectangle = pointLabelGroup.append("rect")
                     .attr("class", `rectangle rectangle__${religion}-${year}`)
                     .attr("id", `rectangle__${religion}-${year}`)
-                    .attr("fill", "black");
+                    .attr("rx", "5")
+                    .attr("ry", "5");
 
-                const pointLabelTextPercentage = labelGroup.append("text")
+                const pointLabelTextPercentage = pointLabelGroup.append("text")
                     .attr("class", `text text__percentage-${religion}-${year}`)
                     .attr("id", `text__percentage-${religion}-${year}`)
-                    .attr("fill", "white")
                     .text(`${religionPercentage.toFixed(1)}%`);
 
-                const pointLabelTextAmount = labelGroup.append("text")
+                const pointLabelTextAmount = pointLabelGroup.append("text")
                     .attr("class", `text text__amount${religion}-${year}`)
                     .attr("id", `text__amount-${religion}-${year}`)
-                    .attr("fill", "white")
                     .text(`${religionCount} Personen`);
 
                 const pointLabelTextPercentageElement = document.getElementById(`text__percentage-${religion}-${year}`);
@@ -349,7 +351,10 @@ function updatePoints() {
                 if (year === d3.max(yearsToShow)) {
                     const coordinatesFromLastCircle = {cx: xScale(year), cy: yScale(religionCount*100/religionCountAll)};
 
-                    labelGroup.append("polygon")
+                    const lineLabelGroup = lineGroup.append("g")
+                        .attr("class", `line-label line-label__${religion}`);
+
+                    lineLabelGroup.append("polygon")
                         .attr("class", `polygon polygon__${religion}`)
                         .attr("points",
                             `${coordinatesFromLastCircle.cx+2},${coordinatesFromLastCircle.cy} 
@@ -357,18 +362,16 @@ function updatePoints() {
                             ${coordinatesFromLastCircle.cx+16},${coordinatesFromLastCircle.cy-6}`
                         );
 
-                    const labelRectangle = labelGroup.append("rect")
+                    const labelRectangle = lineLabelGroup.append("rect")
                         .attr("class", `rectangle rectangle__${religion}`)
                         .attr("id", `rectangle__${religion}`)
                         .attr("x", coordinatesFromLastCircle.cx+16)
                         .attr("y", coordinatesFromLastCircle.cy-6)
-                        .attr("height", 12)
-                        .attr("fill", "black");
+                        .attr("height", 12);
 
-                    const labelText = labelGroup.append("text")
+                    const labelText = lineLabelGroup.append("text")
                         .attr("class", `text text__${religion}`)
                         .attr("id", `text__${religion}`)
-                        .attr("fill", "white")
                         .text(religion);
 
                     const labelTextElement = document.getElementById(`text__${religion}`);

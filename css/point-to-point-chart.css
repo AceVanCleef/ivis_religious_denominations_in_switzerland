@@ -1,0 +1,31 @@
+/*Animation steps*/
+@keyframes appear {
+    0% {opacity: 0}
+    100% {opacity: 100}
+}
+
+.line {
+    stroke: deeppink;
+}
+
+.point-label {
+    fill: deepskyblue;
+    opacity: 0;
+}
+
+.point:hover + .point-label {
+    animation: appear 0.2s ease-in forwards;
+}
+
+.line-label {
+    fill: deepskyblue;
+    opacity: 0;
+}
+
+.line:hover ~ .line-label {
+    animation: appear 0.2s ease-in forwards;
+}
+
+.text {
+    fill: black;
+}
