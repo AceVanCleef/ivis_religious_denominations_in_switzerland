@@ -39,14 +39,12 @@ text.canton-label {
 
 /*---------------- #swiss-regions checkboxes -------------------*/
 
-#map-section {
-    margin-bottom: 10px;
+div#map-wrapper {
+    max-width: 650px;
 }
 
 form#swiss-regions {
     padding: 15px 0;
-    position: absolute;
-    right: 23%;
 }
 
 #swiss-regions section {
