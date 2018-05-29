@@ -3,6 +3,9 @@
 <head>
   <title>Religious Denominations in Switzerland</title>
   <meta charset="utf-8"/>
+  <!-- necessary for media queries -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <link rel="stylesheet" type="text/css" href="css/main-stylesheet.css">
   <link rel="stylesheet" type="text/css" href="css/swiss-map.css">
   <link rel="stylesheet" type="text/css" href="css/nouislider.min.css">
@@ -72,11 +75,14 @@
     <div id="line-graph">
       <!-- auto-generated swiss map here -->
     </div>
-      <a id="repo-link" href="https://github.com/AceVanCleef/ivis_religious_denominations_in_switzerland" target="_blank">
-          <img id="gh-dark" src="./img/GitHub-Mark-64px.png" />
-          <p>Checkout our source code</p>
-      </a>
   </section>
+
+  <aside id="right-sticky">
+    <a id="repo-link" href="https://github.com/AceVanCleef/ivis_religious_denominations_in_switzerland" target="_blank">
+      <img id="gh-dark" src="./img/GitHub-Mark-64px.png" />
+      <p>Checkout our source code</p>
+    </a>
+  </aside>
 </main>
 
 
@@ -88,6 +94,7 @@
 <script src="lib/topojson.v2.min.js"></script>
 <script src="lib/wNumb.js"></script>
 <script src="lib/nouislider.min.js"><!-- source: https://refreshless.com/nouislider/--></script>
+<!--<script src="lib/responsivefy.js"></script>-->
 <!-- internal js code -->
 <!-- Note: For readability, code can be devided into 
 multiple files but must be added before point-to-point-chart.js using <script> tag. -->

@@ -28,14 +28,62 @@ div#line-graph {
     padding: 0 15px;
 }
 
+
+
+
+
+/* forms */
 form#religions {
     padding: 40px 15px;
+    margin-top: 37px;
+    min-width: 163px;
+}
+
+form label {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+form:hover {
+    background: rgba(0,0,0, 0.45);
+    border-radius: 5px;
+    color: white;
+}
+
+form label:hover {
+    color: #f1ce03;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 
+/* ---- right sticky ---- */
+
+
+@media only screen and (max-width: 600px){
+    aside#right-sticky {
+        display: none;
+    }
+}
+
+aside#right-sticky{
+    position:fixed;
+    bottom: 5px;
+    right: 0;
+    width: 18%;
+    height: 100%;
+    background: #3c3f41;
+}
 /* ---- github link ---- */
 a#repo-link{
-    align-self: flex-end;
+    position: absolute;
+    bottom: 0;
+    right: 6%;
     margin-bottom: 30px;
     text-align: center;
     vertical-align: middle;
