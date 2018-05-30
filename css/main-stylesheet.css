@@ -61,6 +61,17 @@ form label:hover {
     cursor: pointer;
 }
 
+/* ---- mouse hover cantonLabel ---- */
+
+div#cantonLabel {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.75);
+    pointer-events: none;
+    padding: 0 10px;
+    color: white;
+    border-radius: 4px;
+}
 
 /* ---- right sticky ---- */
 

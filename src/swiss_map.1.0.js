@@ -24,12 +24,31 @@ const initWithFollowingCantons = ["UR"];
 //          const delimiter = "-"
 // when to implement? When more than two maps are generated.
 
+
+var cantonLabel;
+
 ////-------------------------- main() Entry Point ------------------------
 
 
 export function initSwissMap(){
+    cantonLabel = d3.select("div#cantonLabel")
+        .style('left', 50);
+    console.log("cantonLabel");
+    console.log(cantonLabel);
+
     drawBy(1, "swiss-mini-map");
     drawBy(2, "swiss-map");
+
+    var mapWrapper = d3.select('div#map-wrapper');
+
+    mapWrapper.on("mousemove", d => {
+        //mouse position:
+        let x = d3.mouse(d3.event.currentTarget)[0] + 9;
+        let y = d3.mouse(d3.event.currentTarget)[1] - 45;
+        console.log( d3.mouse(d3.event.currentTarget));
+        cantonLabel.style('left', x + 'px')
+            .style('top', y + 'px');
+    })
 
     d3.select('section#map-section')
         .on('mouseover', mouseOverMap)
@@ -117,7 +136,17 @@ function mouseOutOfMap() {
         .style('padding-top', '100px');
 }
 
+function mouseOverCanton(pathElem) {
+    console.log("mouseOver:");
+    console.log(pathElem);
 
+    cantonLabel.style('display', 'inherit');
+    cantonLabel.select('p').html(pathElem.properties.name);
+}
+
+function mouseOutCanton(cantonIdWithSuffix) {
+    cantonLabel.style('display', 'none');
+}
 
 function click(cantonIdWithSuffix) {
     var currentCanton = cantonsPM.find( function(e) {
@@ -185,6 +214,12 @@ function drawBy(scaleFactor, targetId) {
 
 
             cant.on("click", d => click(d.id + "-" + targetId));
+            cant.on("mouseover", d => {
+                mouseOverCanton(d);
+            });
+            cant.on("mouseout", d => {
+                mouseOutCanton(d);
+            });
 
             g.append("path")
                 .datum(topojson.mesh(topology, topology.objects.cantons))
@@ -192,6 +227,21 @@ function drawBy(scaleFactor, targetId) {
                 .attr("d", pathGenerator);
 
             if (scaleFactor >= cantonLabelThreshold) {
+                /*d3.select("#chart-area-" + targetId)
+                    .selectAll("path")
+                    .on("mouseover", event => {
+                        console.log(this);
+                        mouseOverCanton(this);
+                    });*/
+
+    /*
+                g.selectAll("text.canton-label")
+                    .data(cantons.features)
+                    .enter()
+                    .on("mouseover", d => mouseOver(d.id + "-" + targetId, pathGenerator));
+                //cant.on("mouseout", d => mouseOut(d.id + "-" + targetId));
+*/
+                /*
                 //draw labels.
                 g.selectAll("text.canton-label")
                     .data(cantons.features)
@@ -199,7 +249,7 @@ function drawBy(scaleFactor, targetId) {
                     .attr("class", "canton-label")
                     .attr("transform", function(d) { return "translate(" + pathGenerator.centroid(d) + ")"; })
                     .attr("dy", ".35em")
-                    .text(function(d) { return d.properties.name; });
+                    .text(function(d) { return d.properties.name; });*/
             }
 
             //send Update command to line chart.
