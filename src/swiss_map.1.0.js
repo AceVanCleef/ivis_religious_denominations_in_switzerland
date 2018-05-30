@@ -13,11 +13,10 @@ const height = canvHeight - margin.top - margin.bottom;
 
 
 
-const cantonLabelThreshold = 1.5;
-
-//defines whether "Ganze Schweiz" checkboxes will be checked.
+//defines whether "Ganze Schweiz" checkboxes will be checked on page load.
 export const initMapWithAllCantonsSelected = false;
-const initWithFollowingCantons = ["UR"];
+// defines which individual cantons will be selected on page load.
+const initWithFollowingCantons = ["UR", "TG"];
 
 //stores the targetId suffixes. Add more if you want multiple maps. Remember: you need to add <div> elements with suitable IDs.
 // Optionally: map scaleFactor and a corresponding <div> in index.html with ID. to automate it.
@@ -133,9 +132,6 @@ function click(cantonIdWithSuffix) {
     updateCantons();
 
     allTargetIDs.forEach(targetId => toggleCSSClass(currentCanton.iso + "-" + targetId, "selected-canton"));
-
-    /*toggleCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
-    toggleCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");*/
     updateCheckboxes();
 }
 
@@ -181,14 +177,8 @@ function drawBy(scaleFactor, targetId) {
                     .attr("id", d=> d.id + "-" + targetId)
                     .attr("d", pathGenerator);
 
-            cant.attr("class", c => defineClassListOf(c) );
-
-
             //determine which canton has to be marked as selected
-            d3.select("path#UR" + targetId)
-                .attr("class", "canton selected-canton");
-
-
+            cant.attr("class", c => defineClassListOf(c) );
 
             cant.on("click", d => click(d.id + "-" + targetId));
             cant.on("mouseover", d => {
@@ -203,31 +193,6 @@ function drawBy(scaleFactor, targetId) {
                 .attr("class", "canton-boundary")
                 .attr("d", pathGenerator);
 
-            if (scaleFactor >= cantonLabelThreshold) {
-                /*d3.select("#chart-area-" + targetId)
-                    .selectAll("path")
-                    .on("mouseover", event => {
-                        console.log(this);
-                        mouseOverCanton(this);
-                    });*/
-
-    /*
-                g.selectAll("text.canton-label")
-                    .data(cantons.features)
-                    .enter()
-                    .on("mouseover", d => mouseOver(d.id + "-" + targetId, pathGenerator));
-                //cant.on("mouseout", d => mouseOut(d.id + "-" + targetId));
-*/
-                /*
-                //draw labels.
-                g.selectAll("text.canton-label")
-                    .data(cantons.features)
-                    .enter().append("text")
-                    .attr("class", "canton-label")
-                    .attr("transform", function(d) { return "translate(" + pathGenerator.centroid(d) + ")"; })
-                    .attr("dy", ".35em")
-                    .text(function(d) { return d.properties.name; });*/
-            }
 
             //send Update command to line chart.
             updateCantons();
@@ -243,6 +208,7 @@ function defineClassListOf(c) {
     return str;
 }
 
+//determines whether a canton has to be initiated on page load.
 function activateCanton(iso) {
     return initWithFollowingCantons.includes(iso) || initMapWithAllCantonsSelected;
 }
