@@ -19,40 +19,42 @@ const cantonLabelThreshold = 1.5;
 export const initMapWithAllCantonsSelected = false;
 const initWithFollowingCantons = ["UR"];
 
-//todo: 'var allTargetIDs = []' to store <div id="..."> to easily locate canton views when multiple maps are drawn.
-//      e.g. allTargetIDs = ["swiss-mini-map", "swiss-map"]
-//          const delimiter = "-"
-// when to implement? When more than two maps are generated.
+//stores the targetId suffixes. Add more if you want multiple maps. Remember: you need to add <div> elements with suitable IDs.
+// Optionally: map scaleFactor and a corresponding <div> in index.html with ID. to automate it.
+const allTargetIDs = ["swiss-map"];
 
-
+// div#cantonLabel: informs user which canton he is currently hovering above.
 var cantonLabel;
 
 ////-------------------------- main() Entry Point ------------------------
 
 
 export function initSwissMap(){
-    cantonLabel = d3.select("div#cantonLabel")
-        .style('left', 50);
-    console.log("cantonLabel");
-    console.log(cantonLabel);
+    drawBy(1.75, allTargetIDs[0]);
+    initMapStyle();
 
-    drawBy(1, "swiss-mini-map");
-    drawBy(2, "swiss-map");
-
+    //init div#cantonLabel
+    cantonLabel = d3.select("div#cantonLabel");
     var mapWrapper = d3.select('div#map-wrapper');
-
     mapWrapper.on("mousemove", d => {
         //mouse position:
         let x = d3.mouse(d3.event.currentTarget)[0] + 9;
         let y = d3.mouse(d3.event.currentTarget)[1] - 45;
-        console.log( d3.mouse(d3.event.currentTarget));
         cantonLabel.style('left', x + 'px')
             .style('top', y + 'px');
     })
 
-    d3.select('section#map-section')
-        .on('mouseover', mouseOverMap)
-        .on('mouseout', mouseOutOfMap);
+}
+
+function initMapStyle() {
+    d3.select('div#swiss-map')
+        .style('display', 'block');
+    d3.select('div#map-wrapper')
+        .style('width', '75%');
+    d3.selectAll('#swiss-regions section')
+        .style('float', 'none');
+    d3.select('#all-regions')
+        .style('padding-top', '0');
 
 }
 
@@ -109,33 +111,6 @@ function filterCantonsBy(cantonISOs) {
 
 //------------------------ EventHandler Callbacks -------------------------
 
-function mouseOverMap() {
-    d3.select('div#swiss-mini-map')
-        .style('display', 'none');
-    d3.select('div#swiss-map')
-        .style('display', 'block');
-    d3.select('div#map-wrapper')
-        .style('width', '75%');
-    d3.selectAll('#swiss-regions section')
-        .style('float', 'none');
-    d3.select('#all-regions')
-        .style('padding-top', '0');
-
-}
-
-function mouseOutOfMap() {
-    d3.select('div#swiss-mini-map')
-        .style('display', 'block');
-    d3.select('div#swiss-map')
-        .style('display', 'none');
-    d3.select('div#map-wrapper')
-        .style('width', 'initial');
-    d3.selectAll('#swiss-regions section')
-        .style('float', 'left');
-    d3.select('#all-regions')
-        .style('padding-top', '100px');
-}
-
 function mouseOverCanton(pathElem) {
     console.log("mouseOver:");
     console.log(pathElem);
@@ -157,8 +132,10 @@ function click(cantonIdWithSuffix) {
     //send Update command to line chart.
     updateCantons();
 
-    toggleCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
-    toggleCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");
+    allTargetIDs.forEach(targetId => toggleCSSClass(currentCanton.iso + "-" + targetId, "selected-canton"));
+
+    /*toggleCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
+    toggleCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");*/
     updateCheckboxes();
 }
 
@@ -282,11 +259,13 @@ function activateCanton(iso) {
 export function updateMapVisuals(cantons2update, checked){
     cantons2update.forEach( function(currentCanton){
         if (checked){
-            addCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
-            addCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");
+            allTargetIDs.forEach(targetId => addCSSClass(currentCanton.iso + "-" + targetId, "selected-canton"));
+            /*addCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
+            addCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");*/
         } else {
-            removeCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
-            removeCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");
+            allTargetIDs.forEach(targetId => removeCSSClass(currentCanton.iso + "-" + targetId, "selected-canton"));
+            /*removeCSSClass(currentCanton.iso + "-swiss-mini-map", "selected-canton");
+            removeCSSClass(currentCanton.iso + "-swiss-map", "selected-canton");*/
         }
     });
 
