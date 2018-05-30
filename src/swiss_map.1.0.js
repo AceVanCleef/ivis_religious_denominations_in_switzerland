@@ -39,7 +39,7 @@ export function initSwissMap(){
     mapWrapper.on("mousemove", d => {
         //mouse position:
         let x = d3.event.pageX + 2;
-        let y = d3.event.pageY  - 52;
+        let y = d3.event.pageY  + 22;
         cantonLabel.style('left', x + 'px')
             .style('top', y + 'px');
     });

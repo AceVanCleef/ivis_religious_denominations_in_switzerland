@@ -11,6 +11,7 @@
 }
 .canton:hover {
     fill: burlywood;
+    cursor: pointer;
 }
 main section#map-section .selected-canton {
     fill: blue;
