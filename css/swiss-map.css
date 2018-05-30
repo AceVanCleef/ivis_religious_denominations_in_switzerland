@@ -12,10 +12,10 @@
 .canton:hover {
     fill: burlywood;
 }
-.selected-canton {
+main section#map-section .selected-canton {
     fill: blue;
 }
-.selected-canton:hover {
+main section#map-section .selected-canton:hover {
     fill: lightblue;
 }
 .canton-boundary {

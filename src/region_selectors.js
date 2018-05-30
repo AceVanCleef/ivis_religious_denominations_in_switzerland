@@ -43,11 +43,10 @@ export function setupRegionSelectors() {
         .property('checked', initMapWithAllCantonsSelected)
         .on("click", handleUserInput);
 
-    //update map visuals
-
     //inform graph.
     updateCantons();
 }
+
 
 //------------------------ EventHandler Callbacks -------------------------
 
@@ -101,6 +100,7 @@ function updateMap(checkbox, cantonISOs) {
 }
 
 
+// ---------------------- Lesson Learned: -------------------------
 
 //how to select html item within d3.on() callback function.:
 function click() {

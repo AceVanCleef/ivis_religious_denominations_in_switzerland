@@ -7,6 +7,8 @@
  */
 
 export function addCSSClass(id, className){
+    console.log("addCSSClass");
+    console.log(document.getElementById(id));
     document.getElementById(id).classList.add(className);
 }
 

@@ -2,6 +2,9 @@ import {cantonsPM} from "./swiss_map.1.0.js";
 import {religionsPM} from "./religion_selectors.js";
 import {yearsPM} from "./years_selector.js";
 
+import {initMapWithAllCantonsSelected} from "./swiss_map.1.0.js";
+
+
 let allData;
 let allDataGroupedByYear;
 
@@ -123,8 +126,15 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
 }
 
 export function updateCantons() {
+    if (initMapWithAllCantonsSelected) console.log("update Cantons");
+
     cantonsToShow = getCantonsToShow(cantonsPM);
     selectedDataOnly = getSelectedDataOnly();
+
+    console.log(cantonsToShow);
+    console.log(selectedDataOnly);
+    console.log("cantonsPM:");
+    console.log(cantonsPM);
 
     // create scales for x and y direction
     yScale = updateYScale();
@@ -141,6 +151,8 @@ export function updateReligions() {
 
     // add circle
     updatePoints();
+
+    if (initMapWithAllCantonsSelected) console.log("update Religions");
 }
 
 export function updateYears() {
@@ -156,7 +168,7 @@ export function updateYears() {
     // add circle
     updatePoints();
 
-
+    if (initMapWithAllCantonsSelected) console.log("update Years");
 }
 
 function getCantonsToShow(cantonsPM) {

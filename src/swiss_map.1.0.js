@@ -14,10 +14,10 @@ const height = canvHeight - margin.top - margin.bottom;
 
 
 const cantonLabelThreshold = 1.5;
-var currentScaleFactor = 1;
 
 //defines whether "Ganze Schweiz" checkboxes will be checked.
-export const initMapWithAllCantonsSelected = true;
+export const initMapWithAllCantonsSelected = false;
+const initWithFollowingCantons = ["UR", "ZH", "AG", "BL", "BS"];
 
 //todo: 'var allTargetIDs = []' to store <div id="..."> to easily locate canton views when multiple maps are drawn.
 //      e.g. allTargetIDs = ["swiss-mini-map", "swiss-map"]
@@ -36,9 +36,25 @@ export function initSwissMap(){
         .on('mouseover', mouseOverMap)
         .on('mouseout', mouseOutOfMap);
 
-    //send Update command to line chart.
-    if (initMapWithAllCantonsSelected) updateCantons();
 }
+/*
+function initialValues() {
+    var uriPM = cantonsPM.find(cantonPM => cantonPM.iso === "UR");
+    uriPM.isSelected = true;
+
+    //addCSSClass(uriPM.iso + "-swiss-mini-map", "selected-canton");
+
+    console.log("fuck it");
+    console.log(d3.select("#" + uriPM.iso + "-swiss-mini-map"));
+    console.log(d3.select("#" + uriPM.iso + "-swiss-map"));
+    console.log(d3.select("#" + uriPM.iso + "-swiss-map") !== false);
+    if (d3.select("#" + uriPM.iso + "-swiss-mini-map")) {
+        d3.select("#" + uriPM.iso + "-swiss-mini-map").attr("class", "canton selected-canton");
+    }
+    if (d3.select("#" + uriPM.iso + "-swiss-map")) {
+        d3.select("#" + uriPM.iso + "-swiss-map").attr("class", "canton selected-canton");
+    }
+} */
 
 ////-------------------------- StateData: cantonsPM ------------------------
 // holds the state of each canton whether it is selected or not.
@@ -47,7 +63,7 @@ export const cantonsPM = [];
 function createCantonPM(cantonId) {
     return {
         iso: cantonId,
-        isSelected: initMapWithAllCantonsSelected
+        isSelected: activateCanton(cantonId)
     }
 }
 
@@ -178,12 +194,23 @@ function drawBy(scaleFactor, targetId) {
                     .attr("id", d=> d.id + "-" + targetId)
                     .attr("d", pathGenerator);
 
+            cant.attr("class", c => defineClassListOf(c) );
+
+            console.log("cant = ");
+            console.log(cant);
+            console.log("cantonsPM");
+            console.log(cantonsPM);
+
+            d3.select("path#UR" + targetId)
+                .attr("class", "canton selected-canton");
+/*
             //adding multiple css classes: https://benclinkinbeard.com/d3tips/attrclass-vs-classed/
             if (initMapWithAllCantonsSelected) {
                 cant.attr("class", "canton selected-canton");
             } else {
                 cant.attr("class", "canton");
-            }
+            }*/
+
 
             cant.on("click", d => click(d.id + "-" + targetId));
 
@@ -203,8 +230,30 @@ function drawBy(scaleFactor, targetId) {
                     .text(function(d) { return d.properties.name; });
             }
 
+            //send Update command to line chart.
+            updateCantons();
+            //check whether region checkboxes have to be selected.
+            updateCheckboxes();
         });
+
 }
+
+function defineClassListOf(c) {
+    //"canton selected-canton"
+    console.log("getClassList: ------");
+    console.log("[" + c.id + "]");
+    console.log( activateCanton(c.id));
+    var str = "canton";
+
+    if ( activateCanton(c.id) ) str = "canton selected-canton";
+    console.log(str);
+    return str;
+}
+
+function activateCanton(iso) {
+    return initWithFollowingCantons.includes(iso) || initMapWithAllCantonsSelected;
+}
+
 
 
 //------------------------ communication with region_selectors.js -------------------------
@@ -230,6 +279,7 @@ export function updateMapVisuals(cantons2update, checked){
 
 
 }
+
 
 //---------------- helper function: makes cantonPM.iso comparable to <path id=iso+"-swiss-(mini-)map"> ----------------
 function getCantonIdFrom(cantonIdWithSuffix) {
