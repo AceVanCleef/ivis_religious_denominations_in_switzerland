@@ -54,7 +54,7 @@ export function setupInfoBox() {
         .on('mouseover', event => {
             infoBox.select("h3").html("Wir legen...");
             infoBox.select("p").html("Wert auf <span style='color: blue;text-shadow:0px 0px 3px blue;'>Codequalität </span>" +
-                "und <span style='color: blue;text-shadow:0px 0px 3px blue;'> Wartbarkeit</span>.")
+                "und <span style='color: blue;text-shadow:0px 0px 3px blue;'> Wartbarkeit</span>. Schau rein!")
         })
         .on('mouseout', event => {
                 infoBox.select("h3").html("");
