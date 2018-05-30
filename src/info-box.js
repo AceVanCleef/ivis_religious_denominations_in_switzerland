@@ -48,4 +48,16 @@ export function setupInfoBox() {
                 infoBox.select("h3").html("");
             infoBox.select("p").html("");
         });
+
+    // hovering over github link
+    d3.select("a#repo-link")
+        .on('mouseover', event => {
+            infoBox.select("h3").html("Wir legen...");
+            infoBox.select("p").html("Wert auf <span style='color: blue;text-shadow:0px 0px 3px blue;'>Codequalität </span>" +
+                "und <span style='color: blue;text-shadow:0px 0px 3px blue;'> Wartbarkeit</span>.")
+        })
+        .on('mouseout', event => {
+                infoBox.select("h3").html("");
+            infoBox.select("p").html("");
+        });
 }
