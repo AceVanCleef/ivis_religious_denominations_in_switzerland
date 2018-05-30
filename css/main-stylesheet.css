@@ -13,6 +13,14 @@ body {
     background-color: var(--background);
 }
 
+main {
+    padding-left: 2%;
+}
+.center {
+    margin: auto;
+    width: 100%;
+}
+
 .flex-container {
     display: flex;
     flex-direction: row;
@@ -29,6 +37,9 @@ div#line-graph {
 }
 
 
+div.separator {
+    width: 10%;
+}
 
 
 

@@ -9,15 +9,15 @@ export const religionsPM = [
     //all religions
     { name: "alle_religionen",  id: "_alle_religionen", labeltext: "Alle Religionen",   parentid: "all-religions",    isSelected: false },
     //Christianity
-    { name: "katholiken",       id: "_katholiken",      labeltext: "katholiken",        parentid: "christian-religions",    isSelected: false },
-    { name: "reformierte",      id: "_reformierte",     labeltext: "reformierte",       parentid: "christian-religions",    isSelected: false },
-    { name: "andere_christen",  id: "_andere_christen", labeltext: "andere Christen",   parentid: "christian-religions",    isSelected: false },
+    { name: "katholiken",       id: "_katholiken",      labeltext: "Katholiken",        parentid: "christian-religions",    isSelected: false },
+    { name: "reformierte",      id: "_reformierte",     labeltext: "Reformierte",       parentid: "christian-religions",    isSelected: false },
+    { name: "andere_christen",  id: "_andere_christen", labeltext: "Andere Christen",   parentid: "christian-religions",    isSelected: false },
     //Other religions
     { name: "juden",                id: "_juden",                   labeltext: "Juden",             parentid: "other-religions",   isSelected: false },
     { name: "muslime",              id: "_muslime",                 labeltext: "Muslime",           parentid: "other-religions",   isSelected: false },
     { name: "andere_religionen",    id: "_andere_religionen",       labeltext: "Andere Religionen", parentid: "other-religions",   isSelected: false },
     // no denomination
-    { name: "konfessionslose",  id: "_konfessionslose", labeltext: "konfessionslose",   parentid: "no-religion",    isSelected: false }
+    { name: "konfessionslose",  id: "_konfessionslose", labeltext: "Konfessionslose",   parentid: "no-religion",    isSelected: false }
 ];
 
 //var checkboxSelection;

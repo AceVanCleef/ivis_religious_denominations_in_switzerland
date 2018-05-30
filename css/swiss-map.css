@@ -42,6 +42,8 @@ text.canton-label {
 
 div#map-wrapper {
     max-width: 650px;
+    width: 75%;
+    padding: 0 30px;
 }
 
 form#swiss-regions {

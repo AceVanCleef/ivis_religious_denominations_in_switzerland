@@ -16,7 +16,7 @@ const height = canvHeight - margin.top - margin.bottom;
 //defines whether "Ganze Schweiz" checkboxes will be checked on page load.
 export const initMapWithAllCantonsSelected = false;
 // defines which individual cantons will be selected on page load.
-const initWithFollowingCantons = ["UR", "TG"];
+const initWithFollowingCantons = ["UR"];
 
 //stores the targetId suffixes. Add more if you want multiple maps. Remember: you need to add <div> elements with suitable IDs.
 // Optionally: map scaleFactor and a corresponding <div> in index.html with ID. to automate it.
@@ -35,21 +35,19 @@ export function initSwissMap(){
     //init div#cantonLabel
     cantonLabel = d3.select("div#cantonLabel");
     var mapWrapper = d3.select('div#map-wrapper');
+    //solution by: https://bl.ocks.org/mbostock/1087001
     mapWrapper.on("mousemove", d => {
         //mouse position:
-        let x = d3.mouse(d3.event.currentTarget)[0] + 9;
-        let y = d3.mouse(d3.event.currentTarget)[1] - 45;
+        let x = d3.event.pageX + 2;
+        let y = d3.event.pageY  - 52;
         cantonLabel.style('left', x + 'px')
             .style('top', y + 'px');
-    })
-
+    });
 }
 
 function initMapStyle() {
     d3.select('div#swiss-map')
         .style('display', 'block');
-    d3.select('div#map-wrapper')
-        .style('width', '75%');
     d3.selectAll('#swiss-regions section')
         .style('float', 'none');
     d3.select('#all-regions')
