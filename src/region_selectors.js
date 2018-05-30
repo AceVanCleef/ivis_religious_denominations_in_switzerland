@@ -24,7 +24,7 @@ const regions = [
     { name: "Mittelland",       code: "_Mittelland",parentId: "topographical-regions",    cantons:["AG", "BS", "FR", "GE", "SH", "TG", "VD", "ZG", "ZH"]},
     { name: "Alpen",            code: "_Alpen",     parentId: "topographical-regions",    cantons:["AI", "AR", "BE", "GL", "GR", "LU", "NW", "OW", "SG", "SZ", "TI", "UR", "VS"]},
     //whole country of CH
-    { name: "Schweiz",          code: "_CH",    parentId: "all-regions",
+    { name: "Ganze Schweiz",          code: "_CH",    parentId: "all-regions",
         cantons: ["AG", "AI", "AR", "BE", "BL", "BS", "FR", "GE", "GL", "GR", "JU", "LU", "NE", "NW", "OW", "SG", "SH", "SO", "SZ", "TG", "TI", "UR", "VD", "VS", "ZG", "ZH"]
     }
 ];

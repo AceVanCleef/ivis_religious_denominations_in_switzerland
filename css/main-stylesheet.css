@@ -101,7 +101,22 @@ aside#right-sticky{
     height: 100%;
     background: #3c3f41;
     color: white;
+    text-align: center;
 }
+
+
+section#info-box {
+    box-sizing: border-box;
+    margin-top: 50px;
+}
+
+section#credits {
+    position: absolute;
+    bottom: 175px;
+    right: 15%;
+    font-size: 12px;
+}
+
 /* ---- github link ---- */
 a#repo-link{
     box-sizing: border-box;

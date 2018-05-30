@@ -3,6 +3,7 @@ import {initSwissMap} from "./swiss_map.1.0.js";
 import {setupRegionSelectors} from "./region_selectors.js";
 import {setupReligionSelectors} from "./religion_selectors.js";
 import {setupYearsSelector} from "./years_selector.js";
+import {setupInfoBox} from "./info-box.js";
 
 
 
@@ -17,13 +18,13 @@ export function main(data, dataGroupedByYear){
     console.log("grouped data in main:");
     console.log(dataGroupedByYear);
     setupPointToPointChart(data, dataGroupedByYear);
-    // Data first
+    // Controls
     initSwissMap();
     setupRegionSelectors();
     setupReligionSelectors();
     setupYearsSelector( getAllYearsFrom(dataGroupedByYear) );
-    // graph second
-    //setupPointToPointChart(data, dataGroupedByYear);
+
+    setupInfoBox();
 }
 
 
