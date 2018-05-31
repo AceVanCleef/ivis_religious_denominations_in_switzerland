@@ -65,6 +65,19 @@ Um die Applikation in einer Liveumgebung zu intallieren, lade den Root Folder di
 
 Todo: Die aufgelisteten Technologien können entfernt werden.
 
+## Workshop
+Auf Grund des Workshops vom Dienstag, 29. Mai 2018 konnten wir einige Verbesserungsvorschlege von unserern Mitstudierenden in Erfahrung bringen.
+* Gross-/Kleinschreibung der Religionen ist nicht konstant
+* Unterschiedliche Farben der Linien können hilfreich sein, die Religionen in der Grafik auseinanderzuhalten.
+* Da nur geringfügige Veränderungen über die Zeit sichtbar sind, wurde uns empfohlen, die Grafik nochmals zu überdenken
+* Die Auswahl der anzuzeigenden Jahre sei witzlos und überflüssig
+* Oft werden die 100% in der Grafik nicht voll ausgenutzt. Hier könnte man auf das aktuelle Maximum aufzoomen. Damit würden auch die kleineren Werte in der Grafik besser sichtbar.
+
+Da nur noch begrenzt Zeit zur Verfügung stand, konnten wir nicht mehr alle Vorschläge übernehmen bzw. umsetzen.
+* Gross-/Kleinschreibung ist korrigiert
+* Die Religionen werden mit Farben auseinadergehalten
+* Der Jahresselektor wurde entfernt
+
 ## Authoren
 
 * **Mario Winiker** - *Programmierung & Design* - [Figumari](https://github.com/Figumari)
