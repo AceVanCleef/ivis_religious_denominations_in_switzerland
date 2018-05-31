@@ -22,7 +22,8 @@ let lineLabel;
 let margin;
 let width;
 let height;
-const radius = 4;
+const radius = 6;
+const strokeWidth = 4;
 
 let yScale;
 let xScale;
@@ -53,6 +54,18 @@ const isoMapping = {
     ZG: "Zug",
     ZH: "Zürich"
 };
+
+const religionMapping = {
+    andere_christen: "Andere Christen",
+    andere_religionen: "Andere Religionen",
+    muslime: "Muslime",
+    juden: "Juden",
+    katholiken: "Katholiken",
+    konfessionslose: "Konfessionslose",
+    reformierte: "Reformierte"
+};
+
+
 
 export function setupPointToPointChart(data, dataGroupedByYear) {
     allData = data;
@@ -136,10 +149,10 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
 
         // label position
         pointLabel.style('left', x + 20 + 'px')
-            .style('top', y - 40 + 'px');
+            .style('top', y - 45 + 'px');
 
-        lineLabel.style('left', x + 'px')
-            .style('top', y + 'px');
+        lineLabel.style('left', x + 20 + 'px')
+            .style('top', y - 25 + 'px');
     });
 }
 
@@ -311,68 +324,18 @@ function updatePoints() {
                     .attr("r", radius)
                     .on("mouseover", () => {
                         // Resize circles
-                        point.attr("r", radius * 2);
-
-                        pointLabel.style('display', 'inherit');
-                        pointLabel.select("#pointLabel__percentage").html(`${religionPercentage.toFixed(1)}%`);
-                        pointLabel.select("#pointLabel__headcount").html(`${religionCount} Personen`);
-
+                        point.attr("r", radius * 1.5);
 
                         // Create label for every point
-                        const pointLabelGroup = pointGroup.append("g")
-                            .attr("class", `point-label point-label__${religion}`);
-
-                        pointLabelGroup.append("polygon")
-                            .attr("class", `polygon polygon__${religion}-${year}`)
-                            .attr("points",
-                                `${coordinatesFromCurrentCircle.cx},${coordinatesFromCurrentCircle.cy-2} 
-                            ${coordinatesFromCurrentCircle.cx+6},${coordinatesFromCurrentCircle.cy-16} 
-                            ${coordinatesFromCurrentCircle.cx-6},${coordinatesFromCurrentCircle.cy-16}`
-                            );
-
-                        const pointLabelRectangle = pointLabelGroup.append("rect")
-                            .attr("class", `rectangle rectangle__${religion}-${year}`)
-                            .attr("id", `rectangle__${religion}-${year}`)
-                            .attr("rx", "5")
-                            .attr("ry", "5");
-
-                        const pointLabelTextPercentage = pointLabelGroup.append("text")
-                            .attr("class", `text text__percentage-${religion}-${year}`)
-                            .attr("id", `text__percentage-${religion}-${year}`)
-                            .text(`${religionPercentage.toFixed(1)}%`);
-
-                        const pointLabelTextAmount = pointLabelGroup.append("text")
-                            .attr("class", `text text__amount${religion}-${year}`)
-                            .attr("id", `text__amount-${religion}-${year}`)
-                            .text(`${religionCount} Personen`);
-
-                        const pointLabelTextPercentageElement = document.getElementById(`text__percentage-${religion}-${year}`);
-                        const pointLabelTextPercentageSVG = pointLabelTextPercentageElement.getBBox();
-
-                        const pointLabelTextAmountElement = document.getElementById(`text__amount-${religion}-${year}`);
-                        const pointLabelTextAmountSVG = pointLabelTextAmountElement.getBBox();
-
-                        pointLabelRectangle.attr("x", coordinatesFromCurrentCircle.cx-(pointLabelTextAmountSVG.width/2)-4)
-                            .attr("y", coordinatesFromCurrentCircle.cy-16-pointLabelTextPercentageSVG.height-pointLabelTextAmountSVG.height-8-4)
-                            .attr("width", pointLabelTextAmountSVG.width+8)
-                            .attr("height", pointLabelTextPercentageSVG.height+pointLabelTextAmountSVG.height+8+4);
-
-                        const pointLabelRectangleElement = document.getElementById(`rectangle__${religion}-${year}`);
-                        const pointLabelRectangleSVG = pointLabelRectangleElement.getBBox();
-
-                        pointLabelTextPercentage.attr("x", pointLabelRectangleSVG.x+(pointLabelRectangleSVG.width/2))
-                            .attr("y", coordinatesFromCurrentCircle.cy-16-pointLabelRectangleSVG.height+14);
-
-                        pointLabelTextAmount.attr("x", pointLabelRectangleSVG.x+(pointLabelRectangleSVG.width/2))
-                            .attr("y", coordinatesFromCurrentCircle.cy-16-8);
+                        pointLabel.style('display', 'inherit');
+                        pointLabel.select("#pointLabel__percentage").html(`${religionPercentage.toFixed(1)}%`);
+                        pointLabel.select("#pointLabel__headcount").html(`${religionCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'")} Personen`);
                     })
                     .on("mouseout", () => {
                         // Resize point
                         point.attr("r", radius);
 
                         pointLabel.style('display', 'none');
-
-                        pointGroup.selectAll(".point-label").remove();
                     });
 
                 // Connect points with lines
@@ -383,16 +346,18 @@ function updatePoints() {
                         .attr("y1", coordinatesFromPreviousCircle.cy)
                         .attr("x2", coordinatesFromCurrentCircle.cx)
                         .attr("y2", coordinatesFromCurrentCircle.cy)
+                        .attr("stroke-width", strokeWidth)
                         .on("mouseover", () => {
                             // Resize line
-                            d3.selectAll(`.line__${religion}`).attr("stroke-width", 4);
+                            d3.selectAll(`.line__${religion}`).attr("stroke-width", strokeWidth*2);
 
+                            // Label for the Lines
                             lineLabel.style('display', 'inherit');
-                            lineLabel.select("#lineLabel__religion").html(religion);
+                            lineLabel.select("#lineLabel__religion").html(religionMapping[religion]);
                         })
                         .on("mouseout", () => {
                             // Resize line
-                            d3.selectAll(`.line__${religion}`).attr("stroke-width", 1);
+                            d3.selectAll(`.line__${religion}`).attr("stroke-width", strokeWidth);
 
                             lineLabel.style('display', 'none');
                         });
@@ -402,48 +367,6 @@ function updatePoints() {
                 coordinatesFromPreviousCircle.cy = coordinatesFromCurrentCircle.cy;
 
                 ++counter;
-
-
-
-
-                // Create label for every religion line
-                if (year === d3.max(yearsToShow)) {
-                    const coordinatesFromLastCircle = {cx: xScale(year), cy: yScale(religionCount*100/religionCountAll)};
-
-                    const lineLabelGroup = lineGroup.append("g")
-                        .attr("class", `line-label line-label__${religion}`);
-
-                    lineLabelGroup.append("polygon")
-                        .attr("class", `polygon polygon__${religion}`)
-                        .attr("points",
-                            `${coordinatesFromLastCircle.cx+2},${coordinatesFromLastCircle.cy} 
-                            ${coordinatesFromLastCircle.cx+16},${coordinatesFromLastCircle.cy+6} 
-                            ${coordinatesFromLastCircle.cx+16},${coordinatesFromLastCircle.cy-6}`
-                        );
-
-                    const labelRectangle = lineLabelGroup.append("rect")
-                        .attr("class", `rectangle rectangle__${religion}`)
-                        .attr("id", `rectangle__${religion}`)
-                        .attr("x", coordinatesFromLastCircle.cx+16)
-                        .attr("y", coordinatesFromLastCircle.cy-6)
-                        .attr("height", 12);
-
-                    const labelText = lineLabelGroup.append("text")
-                        .attr("class", `text text__${religion}`)
-                        .attr("id", `text__${religion}`)
-                        .text(religion);
-
-                    const labelTextElement = document.getElementById(`text__${religion}`);
-                    const labelTextSVG = labelTextElement.getBBox();
-
-                    labelRectangle.attr("width", labelTextSVG.width+8);
-
-                    const labelRectangleElement = document.getElementById(`rectangle__${religion}`);
-                    const labelRectangleSVG = labelRectangleElement.getBBox();
-
-                    labelText.attr("x", labelRectangleSVG.x+(labelRectangleSVG.width/2))
-                        .attr("y", coordinatesFromLastCircle.cy+4);
-                }
             });
         });
     }
