@@ -10,10 +10,6 @@
 
 .point-label {
     fill: deepskyblue;
-    opacity: 0;
-}
-
-.point:hover + .point-label {
     animation: appear 0.2s ease-in forwards;
 }
 

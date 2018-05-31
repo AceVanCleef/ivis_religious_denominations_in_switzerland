@@ -84,6 +84,30 @@ div#cantonLabel {
     border-radius: 4px;
 }
 
+/* ---- mouse hover pointLabel ---- */
+
+div#pointLabel {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.75);
+    pointer-events: none;
+    padding: 0 10px;
+    color: white;
+    border-radius: 4px;
+}
+
+/* ---- mouse hover lineLabel ---- */
+
+div#lineLabel {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.75);
+    pointer-events: none;
+    padding: 0 10px;
+    color: white;
+    border-radius: 4px;
+}
+
 /* ---- right sticky ---- */
 
 
