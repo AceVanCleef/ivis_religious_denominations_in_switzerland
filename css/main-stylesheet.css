@@ -1,5 +1,16 @@
 :root {
-    --background: #ecebe4
+    --background: #f6faff;
+    --all-religions: rgba(0,0,0, 0.45);
+    --section_christian-religions: #ddb9c7;
+    --catholics: #a54569;
+    --reformists: #840032;
+    --other-christians: #610025;
+    --section_other-religions: #bad7e0;
+    --jews: #4895ad;
+    --muslims: #046e8f;
+    --other-religions: #035169;
+    --section_no-religion: #f5d8a2;
+    --confessionless: #e59500;
 }
 
 
@@ -42,15 +53,9 @@ div.separator {
 }
 
 
-
 /* forms */
-form#religions {
-    padding: 40px 15px;
-    margin-top: 37px;
-    min-width: 163px;
-}
-
 form label {
+    display: block;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
     -khtml-user-select: none; /* Konqueror HTML */
@@ -61,7 +66,7 @@ form label {
 }
 
 form:hover {
-    background: rgba(0,0,0, 0.45);
+    background: var(--all-religions);
     border-radius: 5px;
     color: white;
 }
@@ -75,6 +80,30 @@ form label:hover {
 /* ---- mouse hover cantonLabel ---- */
 
 div#cantonLabel {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.75);
+    pointer-events: none;
+    padding: 0 10px;
+    color: white;
+    border-radius: 4px;
+}
+
+/* ---- mouse hover pointLabel ---- */
+
+div#pointLabel {
+    display: none;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.75);
+    pointer-events: none;
+    padding: 0 10px;
+    color: white;
+    border-radius: 4px;
+}
+
+/* ---- mouse hover lineLabel ---- */
+
+div#lineLabel {
     display: none;
     position: absolute;
     background: rgba(0, 0, 0, 0.75);

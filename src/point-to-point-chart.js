@@ -16,9 +16,14 @@ let selectedDataOnly;
 let svg;
 let g;
 let points;
+let pointLabel;
+let lineLabel;
+
 let margin;
 let width;
 let height;
+const radius = 6;
+const strokeWidth = 4;
 
 let yScale;
 let xScale;
@@ -50,6 +55,18 @@ const isoMapping = {
     ZH: "Zürich"
 };
 
+const religionMapping = {
+    andere_christen: "Andere Christen",
+    andere_religionen: "Andere Religionen",
+    muslime: "Muslime",
+    juden: "Juden",
+    katholiken: "Katholiken",
+    konfessionslose: "Konfessionslose",
+    reformierte: "Reformierte"
+};
+
+
+
 export function setupPointToPointChart(data, dataGroupedByYear) {
     allData = data;
     allDataGroupedByYear = dataGroupedByYear;
@@ -58,10 +75,9 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
     const canvHeight = 450, canvWidth = 660;
     svg = d3.select("div#line-graph").append("svg")
         .attr("width", canvWidth)
-        .attr("height", canvHeight)
-        //.style("border", "1px solid");
+        .attr("height", canvHeight);
 
-    // calc the width and height depending on margins.
+    // calculate the width and height depending on margins.
     margin = {top: 50, right: 80, bottom: 50, left: 60};
     width = canvWidth - margin.left - margin.right - 60;
     height = canvHeight - margin.top - margin.bottom;
@@ -72,7 +88,7 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-    // initial data
+    // initiate data
     let allCantons = [];
     allDataGroupedByYear[0].kantone.forEach(canton => allCantons.push({name: canton.kanton, iso: "ZH", isSelected: 'false'}));
     allCantons[4].isSelected = true;
@@ -99,8 +115,6 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
         {year: 2016, isSelected: true}
     ];
 
-
-
     cantonsToShow = getCantonsToShow(allCantons);
     religionsToShow = getReligionsToShow(allReligions);
     yearsToShow = getYearsToShow(allYears);
@@ -123,6 +137,23 @@ export function setupPointToPointChart(data, dataGroupedByYear) {
     createYLabel();
 
     points = g.append("g").attr("class", "points");
+
+    // initiate labels
+    pointLabel = d3.select("div#pointLabel");
+    lineLabel = d3.select("div#lineLabel");
+    const graphWrapper = d3.select('div#line-graph');
+    graphWrapper.on("mousemove", d => {
+        // mouse position
+        let x = d3.event.pageX;
+        let y = d3.event.pageY;
+
+        // label position
+        pointLabel.style('left', x + 20 + 'px')
+            .style('top', y - 45 + 'px');
+
+        lineLabel.style('left', x + 20 + 'px')
+            .style('top', y - 25 + 'px');
+    });
 }
 
 export function updateCantons() {
@@ -130,11 +161,6 @@ export function updateCantons() {
 
     cantonsToShow = getCantonsToShow(cantonsPM);
     selectedDataOnly = getSelectedDataOnly();
-
-    console.log(cantonsToShow);
-    console.log(selectedDataOnly);
-    console.log("cantonsPM:");
-    console.log(cantonsPM);
 
     // create scales for x and y direction
     yScale = updateYScale();
@@ -213,9 +239,9 @@ function createYLabel() {
         .attr("y", 0 - margin.left)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
-        .attr("font-family", "sans-serif")
+        .style("font-size", "16px")
         .style("text-anchor", "middle")
-        .text("Prozent");
+        .text("Prozentualer Anteil");
 }
 
 function createXLabel() {
@@ -224,7 +250,7 @@ function createXLabel() {
         .attr("y", height + margin.bottom / 2)
         .attr("x", width / 2)
         .attr("dy", "1em")
-        .attr("font-family", "sans-serif")
+        .style("font-size", "16px")
         .style("text-anchor", "middle")
         .text("Jahr");
 }
@@ -244,7 +270,9 @@ function updateXAxis() {
 function updateYAxis() {
     g.select("#axis-y").remove();
     // create yAxis
-    const yAxis = d3.axisLeft(yScale);
+    const yAxis = d3.axisLeft(yScale)
+        .tickSize(8)
+        .tickPadding(10);
     g.append("g")  // create a group and add axis
         .attr("id", "axis-y")
         .call(yAxis);
@@ -289,11 +317,26 @@ function updatePoints() {
 
                 const pointGroup = religionGroup.append("g").attr("class", `point-group point-group__${religion}-${year}`);
 
-                pointGroup.append("circle")
+                const point = pointGroup.append("circle")
                     .attr("class", `point point__${religion}-${year}`)
                     .attr("cx", coordinatesFromCurrentCircle.cx)
                     .attr("cy", coordinatesFromCurrentCircle.cy)
-                    .attr("r", 4);
+                    .attr("r", radius)
+                    .on("mouseover", () => {
+                        // Resize circles
+                        point.attr("r", radius * 1.5);
+
+                        // Create label for every point
+                        pointLabel.style('display', 'inherit');
+                        pointLabel.select("#pointLabel__percentage").html(`${religionPercentage.toFixed(1)}%`);
+                        pointLabel.select("#pointLabel__headcount").html(`${religionCount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'")} Personen`);
+                    })
+                    .on("mouseout", () => {
+                        // Resize point
+                        point.attr("r", radius);
+
+                        pointLabel.style('display', 'none');
+                    });
 
                 // Connect points with lines
                 if (counter > 0) {
@@ -302,101 +345,28 @@ function updatePoints() {
                         .attr("x1", coordinatesFromPreviousCircle.cx)
                         .attr("y1", coordinatesFromPreviousCircle.cy)
                         .attr("x2", coordinatesFromCurrentCircle.cx)
-                        .attr("y2", coordinatesFromCurrentCircle.cy);
+                        .attr("y2", coordinatesFromCurrentCircle.cy)
+                        .attr("stroke-width", strokeWidth)
+                        .on("mouseover", () => {
+                            // Resize line
+                            d3.selectAll(`.line__${religion}`).attr("stroke-width", strokeWidth*2);
+
+                            // Label for the Lines
+                            lineLabel.style('display', 'inherit');
+                            lineLabel.select("#lineLabel__religion").html(religionMapping[religion]);
+                        })
+                        .on("mouseout", () => {
+                            // Resize line
+                            d3.selectAll(`.line__${religion}`).attr("stroke-width", strokeWidth);
+
+                            lineLabel.style('display', 'none');
+                        });
                 }
 
                 coordinatesFromPreviousCircle.cx = coordinatesFromCurrentCircle.cx;
                 coordinatesFromPreviousCircle.cy = coordinatesFromCurrentCircle.cy;
 
                 ++counter;
-
-                // Create label for every point
-                const pointLabelGroup = pointGroup.append("g")
-                    .attr("class", `point-label point-label__${religion}`);
-
-                pointLabelGroup.append("polygon")
-                    .attr("class", `polygon polygon__${religion}-${year}`)
-                    .attr("points",
-                        `${coordinatesFromCurrentCircle.cx},${coordinatesFromCurrentCircle.cy-2} 
-                            ${coordinatesFromCurrentCircle.cx+6},${coordinatesFromCurrentCircle.cy-16} 
-                            ${coordinatesFromCurrentCircle.cx-6},${coordinatesFromCurrentCircle.cy-16}`
-                    );
-
-                const pointLabelRectangle = pointLabelGroup.append("rect")
-                    .attr("class", `rectangle rectangle__${religion}-${year}`)
-                    .attr("id", `rectangle__${religion}-${year}`)
-                    .attr("rx", "5")
-                    .attr("ry", "5");
-
-                const pointLabelTextPercentage = pointLabelGroup.append("text")
-                    .attr("class", `text text__percentage-${religion}-${year}`)
-                    .attr("id", `text__percentage-${religion}-${year}`)
-                    .text(`${religionPercentage.toFixed(1)}%`);
-
-                const pointLabelTextAmount = pointLabelGroup.append("text")
-                    .attr("class", `text text__amount${religion}-${year}`)
-                    .attr("id", `text__amount-${religion}-${year}`)
-                    .text(`${religionCount} Personen`);
-
-                const pointLabelTextPercentageElement = document.getElementById(`text__percentage-${religion}-${year}`);
-                const pointLabelTextPercentageSVG = pointLabelTextPercentageElement.getBBox();
-
-                const pointLabelTextAmountElement = document.getElementById(`text__amount-${religion}-${year}`);
-                const pointLabelTextAmountSVG = pointLabelTextAmountElement.getBBox();
-
-                pointLabelRectangle.attr("x", coordinatesFromCurrentCircle.cx-(pointLabelTextAmountSVG.width/2)-4)
-                    .attr("y", coordinatesFromCurrentCircle.cy-16-pointLabelTextPercentageSVG.height-pointLabelTextAmountSVG.height-8-4)
-                    .attr("width", pointLabelTextAmountSVG.width+8)
-                    .attr("height", pointLabelTextPercentageSVG.height+pointLabelTextAmountSVG.height+8+4);
-
-                const pointLabelRectangleElement = document.getElementById(`rectangle__${religion}-${year}`);
-                const pointLabelRectangleSVG = pointLabelRectangleElement.getBBox();
-
-                pointLabelTextPercentage.attr("x", pointLabelRectangleSVG.x+(pointLabelRectangleSVG.width/2))
-                    .attr("y", coordinatesFromCurrentCircle.cy-16-pointLabelRectangleSVG.height+14);
-
-                pointLabelTextAmount.attr("x", pointLabelRectangleSVG.x+(pointLabelRectangleSVG.width/2))
-                    .attr("y", coordinatesFromCurrentCircle.cy-16-8);
-
-
-                // Create label for every religion line
-                if (year === d3.max(yearsToShow)) {
-                    const coordinatesFromLastCircle = {cx: xScale(year), cy: yScale(religionCount*100/religionCountAll)};
-
-                    const lineLabelGroup = lineGroup.append("g")
-                        .attr("class", `line-label line-label__${religion}`);
-
-                    lineLabelGroup.append("polygon")
-                        .attr("class", `polygon polygon__${religion}`)
-                        .attr("points",
-                            `${coordinatesFromLastCircle.cx+2},${coordinatesFromLastCircle.cy} 
-                            ${coordinatesFromLastCircle.cx+16},${coordinatesFromLastCircle.cy+6} 
-                            ${coordinatesFromLastCircle.cx+16},${coordinatesFromLastCircle.cy-6}`
-                        );
-
-                    const labelRectangle = lineLabelGroup.append("rect")
-                        .attr("class", `rectangle rectangle__${religion}`)
-                        .attr("id", `rectangle__${religion}`)
-                        .attr("x", coordinatesFromLastCircle.cx+16)
-                        .attr("y", coordinatesFromLastCircle.cy-6)
-                        .attr("height", 12);
-
-                    const labelText = lineLabelGroup.append("text")
-                        .attr("class", `text text__${religion}`)
-                        .attr("id", `text__${religion}`)
-                        .text(religion);
-
-                    const labelTextElement = document.getElementById(`text__${religion}`);
-                    const labelTextSVG = labelTextElement.getBBox();
-
-                    labelRectangle.attr("width", labelTextSVG.width+8);
-
-                    const labelRectangleElement = document.getElementById(`rectangle__${religion}`);
-                    const labelRectangleSVG = labelRectangleElement.getBBox();
-
-                    labelText.attr("x", labelRectangleSVG.x+(labelRectangleSVG.width/2))
-                        .attr("y", coordinatesFromLastCircle.cy+4);
-                }
             });
         });
     }

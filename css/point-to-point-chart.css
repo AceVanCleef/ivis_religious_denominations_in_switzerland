@@ -4,16 +4,45 @@
     100% {opacity: 100}
 }
 
+#line-graph {
+    display: flex;
+    align-items: flex-end;
+}
+
 .line {
-    stroke: deeppink;
+    stroke: black;
+}
+
+.line__katholiken {
+    stroke: var(--catholics);
+}
+
+.line__reformierte {
+    stroke: var(--reformists);
+}
+
+.line__andere_christen {
+    stroke: var(--other-christians);
+}
+
+.line__juden {
+    stroke: var(--jews);
+}
+
+.line__muslime {
+    stroke: var(--muslims);
+}
+
+.line__andere_religionen {
+    stroke: var(--other-religions);
+}
+
+.line__konfessionslose {
+    stroke: var(--confessionless);
 }
 
 .point-label {
     fill: deepskyblue;
-    opacity: 0;
-}
-
-.point:hover + .point-label {
     animation: appear 0.2s ease-in forwards;
 }
 
@@ -28,4 +57,83 @@
 
 .text {
     fill: black;
+}
+
+/*Form*/
+#religions {
+    padding: 16px 16px 0 16px;
+    margin-top: 37px;
+    min-width: 163px;
+}
+
+
+#religions section {
+    margin: 0 0 16px 0;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+
+#religions label {
+    width: 100%;
+    margin: 0 0 6px 0;
+    padding: 2px;
+    border-radius: 4px;
+}
+
+#label___alle_religionen {
+}
+
+#christian-religions {
+    background-color: var(--section_christian-religions);
+    color: #000000;
+}
+
+#label___katholiken {
+    background-color: var(--catholics);
+    color: #FFFFFF;
+}
+
+#label___reformierte {
+    background-color: var(--reformists);
+    color: #FFFFFF;
+}
+
+#label___andere_christen {
+    background-color: var(--other-christians);
+    color: #FFFFFF;
+}
+
+#other-religions {
+    background-color: var(--section_other-religions);
+    color: #000000;
+}
+
+#label___juden {
+    background-color: var(--jews);
+    color: #FFFFFF;
+}
+
+#label___muslime {
+    background-color: var(--muslims);
+    color: #FFFFFF;
+}
+
+#label___andere_religionen {
+    background-color: var(--other-religions);
+    color: #FFFFFF;
+}
+
+#no-religion {
+    background-color: var(--section_no-religion);
+    color: #000000;
+}
+
+#label___konfessionslose {
+    background-color: var(--confessionless);
+    color: #000000;
+}
+
+#religions p {
+    margin: 0 0 16px 0;
 }

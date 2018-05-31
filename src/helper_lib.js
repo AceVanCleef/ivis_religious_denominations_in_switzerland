@@ -44,6 +44,8 @@ export function createHtmlInputElementOfType(_type, _name, _value, _id, _labelte
     var input = document.createElement("INPUT");
     var text  = document.createTextNode(_labeltext);
 
+    // define labels attributes
+    label.id = `label__${_id}`;
     // define input's attributes
     input.type = _type;
     input.name = _name;
@@ -56,8 +58,9 @@ export function createHtmlInputElementOfType(_type, _name, _value, _id, _labelte
     //append to parent
     parent.appendChild(label);
 
-    if (_withLineBreak){
-        var br = document.createElement('br');
-        parent.appendChild(br);
-    }
+    /*Not needed anymore because of CSS display: block*/
+    // if (_withLineBreak){
+    //     var br = document.createElement('br');
+    //     parent.appendChild(br);
+    // }
 }
