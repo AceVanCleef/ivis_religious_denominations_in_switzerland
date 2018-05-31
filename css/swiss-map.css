@@ -68,8 +68,10 @@ form#swiss-regions {
 
 /* initial values */
 div#swiss-map {
-    display: none;
+    display: flex;
+    align-items: flex-end;
     width: 100%;
+    height: 100%;
 }
 div#swiss-map svg {
     width: 100%;

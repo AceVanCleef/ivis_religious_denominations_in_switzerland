@@ -4,6 +4,11 @@
     100% {opacity: 100}
 }
 
+#line-graph {
+    display: flex;
+    align-items: flex-end;
+}
+
 .line {
     stroke: black;
 }

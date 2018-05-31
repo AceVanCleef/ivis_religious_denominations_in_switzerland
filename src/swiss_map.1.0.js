@@ -46,8 +46,7 @@ export function initSwissMap(){
 }
 
 function initMapStyle() {
-    d3.select('div#swiss-map')
-        .style('display', 'block');
+    d3.select('div#swiss-map');
     d3.selectAll('#swiss-regions section')
         .style('float', 'none');
     d3.select('#all-regions')
