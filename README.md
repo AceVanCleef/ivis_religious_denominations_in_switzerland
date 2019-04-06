@@ -87,7 +87,7 @@ Due to time constraints, the following changes have been made.
 * **Stefan Wohlgensinger** - *Programming & Design* - [AceVanCleef](https://github.com/AceVanCleef)
 
 
-## Anerkennung
+## Recognition
 
 * Our fellow students who tested our application and gave us their feedback.
 * Our fellow students who helped us with tips and hints regarding D3.
