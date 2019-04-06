@@ -1,5 +1,5 @@
 
-** Für Deutsch, siehe weiter unten. **
+__Für Deutsch, siehe weiter unten.__
 
 # Religious Denominations in Switzerland - (ivis) 
 
@@ -34,13 +34,13 @@ Since we are used to the encapsulation paradigm of object oriented programming w
 * **point-to-point-chart.js** - Draws the graph.
 * **swiss_map.1.0.js** - Draws the map of Switzerland and sets up the selection of cantons.
 * **region_selectors.js** - Sets up checkboxes for selecting regions and updates the map and graph upon user input.
-* **religion_selectors.js** - Sets up checkboxes for selection denominations.
+* **religion_selectors.js** - Sets up checkboxes for selecting denominations.
 * Years_selector.js - Initially intended to provide the end user the choide of which years he wants to display. However, during usability tests we realised that this feature didn't offer any significant benefit.
 * **helper_lib.js** - a small collection of hand crafted helper functions.
 * **info-box.js** - Initializes the logic of the info-box in &lt;aside id='right-sticky'&gt;.
 
 
-swiss_map.1.0.js, region_selectors.js and religion_selectors.js are set up in a way that they inform the point-to-point-chart.js about user inputs via predefined update - functions.
+swiss_map.1.0.js, region_selectors.js and religion_selectors.js are set up to inform the point-to-point-chart.js about user inputs via predefined update - functions.
 
 
 ### Difficulties, Challenges
@@ -73,7 +73,7 @@ During the lecture of Tuesday, 29. May 2018 this application has been tested by 
 * Allocating a different color to each line might help to read the graph more easily.
 * Following the x-Axis of the graph, only slight changes are noticeable.
 * Selecting which years to display doesn't offer any benefit.
-* Since some lines of the graph align closeby each other, it might be helpful to be able to zoom in.
+* Some lines of the graph align closeby each other. Being able to zoom it might help in reading the graph more easily.
 
 Due to time constraints, the following changes have been made.
 * Capitalization has been corrected.
@@ -94,7 +94,7 @@ Due to time constraints, the following changes have been made.
 * Our lecturer for answering our questions regarding D3.
 
 
-* 06. April 2019: Translated README.md to English *
+_06. April 2019: Translated README.md to English_
 
 ---
 
